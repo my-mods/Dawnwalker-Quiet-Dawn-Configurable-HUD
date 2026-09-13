@@ -4,35 +4,17 @@ Keep the world in view, with health and stamina returning when needed. Combat, d
 
 [size=4][b][color=#E8C88A]Why use Quiet Dawn instead of other HUD mods?[/color][/b][/size]
 
-Choose Quiet Dawn if you want a quiet screen during exploration and combat, with brief reminders when resources or equipment change. [url=https://www.nexusmods.com/thebloodofdawnwalker/mods/344]Dynamic HUD[/url] and [url=https://www.nexusmods.com/thebloodofdawnwalker/mods/132]HUD tweaks - Auto Hide HUD (UE4SS)[/url] already offer automatic hiding and customization. The choice comes down to how you want information to return and how much layout control you need.
-
-[size=3][b][color=#A8D5C2]Compared with Dynamic HUD[/color][/b][/size]
-
-Dynamic HUD lets you choose what appears while idle, in Focus or with a weapon drawn. It also offers dynamic health/stamina/time visibility, separate visible and hidden opacities, HUD scaling and enemy/boss health-bar toggles. Both mods support the optional Mod Setting Menu. Dynamic HUD also picks up saved config changes during play.
-
-Quiet Dawn gives you a consistent quiet setup: drawing a weapon, entering combat, locking on or using Focus does not bring back the general HUD. Resource alerts and your chosen panel opacities still apply. Choose it when you want information to return for a specific reason, even in a fight. Choose Dynamic HUD if you prefer different HUD selections for those gameplay states, resizing player panels, or the option to keep enemy health bars.
-
-[size=3][b][color=#A8D5C2]Compared with HUD tweaks - Auto Hide HUD (UE4SS)[/color][/b][/size]
-
-HUD tweaks is a broader layout editor: it offers position, size and opacity changes alongside auto-hide, with INI changes reloadable in-game through a configurable key. It also has a HUD peek and configurable combat, Focus and resource-based reveal triggers, including a health threshold and a filter for small resource changes. HUD peek and resource-based reveals are shared features. It suits players who want to move and resize their HUD and experiment without reloading a save.
-
-Quiet Dawn offers an optional menu for visibility, alert thresholds, reveal durations and individual combat cues. Choose it for those focused controls and the behavior below. It has no general panel positioning or scaling; only combat cues have a size control. Menu changes take effect after Apply and loading a save; manual INI edits require restarting and loading a save.
-
-[size=3][b][color=#A8D5C2]How the HUD refreshes[/color][/b][/size]
-
-Quiet Dawn reacts to game events, so it does not keep checking HUD and resource state on a continuous loop. Dynamic HUD 1.3 schedules a repeating update every 50 ms, with gameplay conditions sampled every second update. HUD tweaks 5 checks auto-hide conditions on a repeating timer set to 100 ms by default. Both mods also use event hooks.
-
-Quiet Dawn uses temporary timers to process queued changes, wait briefly for widgets to become ready and end timed reveals. These stop when their work is finished; it has no continuous HUD polling loop or HUD Tick hook. The practical difference is fewer routine HUD checks between events. Quiet Dawn still does work when events arrive.
-
-[b][color=#A8D5C2]What this means while playing:[/color][/b]
-
 [list]
-[*][b][color=#A8D5C2]Warnings without constant clutter:[/color][/b] At automatic opacity, health/blood and stamina return after relevant changes and stay visible below your chosen thresholds. Health or blood gains of at least 0.2% of the bar also reveal the panel and refresh its timer, making regeneration visible while filtering smaller fluctuations.
-[*][b][color=#A8D5C2]A quick check on demand:[/color][/b] Hold Controls Legend for a brief HUD peek. Switching items/abilities or advancing time also reveals the relevant panel briefly.
-[*][b][color=#A8D5C2]Keep the help you want:[/color][/b] Adjust 17 panel opacities and independently enable counterattack directions, unblockable warnings, directional parry cues and the lock icon.
+[*][b][color=#A8D5C2]Warnings without constant clutter:[/color][/b] Health/blood and stamina return for resource alerts and stay visible below your chosen thresholds.
+[*][b][color=#A8D5C2]A quick check on demand:[/color][/b] Hold Controls Legend for a HUD peek. Switching items/abilities or advancing time briefly reveals the relevant panel.
+[*][b][color=#A8D5C2]Keep the help you want:[/color][/b] Adjust 17 panel opacities and choose which counterattack, unblockable, parry and lock-on cues to show.
 [/list]
 
-[b][color=#E6B980]Tradeoff: less combat information.[/color][/b] Quiet Dawn always hides enemy and boss health bars. Enemy names, difficulty icons and all four combat cues are also hidden by default, which can make learning fights harder. You can restore the names, difficulty icons and cues separately, but there is no setting to restore enemy health bars.
+[b][color=#A8D5C2]How the HUD refreshes:[/color][/b] Quiet Dawn uses game events and temporary timers, with no continuous HUD polling. Dynamic HUD 1.3 and HUD tweaks 5 combine event hooks with repeating checks.
+
+[b][color=#A8D5C2]Compared with [url=https://www.nexusmods.com/thebloodofdawnwalker/mods/344]Dynamic HUD[/url]:[/color][/b] Dynamic HUD offers different HUD setups for idle, Focus and weapon-drawn states, plus scaling and optional enemy health bars. Quiet Dawn stays quiet across those states and always hides enemy/boss health bars.
+
+[b][color=#A8D5C2]Compared with [url=https://www.nexusmods.com/thebloodofdawnwalker/mods/132]HUD tweaks[/url]:[/color][/b] HUD tweaks offers panel positioning/scaling and in-game INI reloads. Quiet Dawn focuses on visibility, alerts and combat cues; it has no general layout editor.
 
 [size=4][b][color=#E8C88A]Features[/color][/b][/size]
 
