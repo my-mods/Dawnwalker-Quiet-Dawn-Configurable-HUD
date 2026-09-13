@@ -14,7 +14,7 @@ For **The Blood of Dawnwalker**. Combat, drawing a weapon, lock-on, and focus no
 
 At 0% opacity, Quiet Dawn hides the general HUD between alerts and reveals. Item and ability quickslots appear briefly after using the switch control (3 seconds by default); the double-arrow switch hint stays hidden. The special-attack panel appears only while its cooldown is running. Positive panel opacity keeps the chosen value, subject to the game's visibility rules. All 17 managed panels have 0% to 100% opacity sliders in 5-point steps. Interaction prompts, dialogue, subtitles, notifications and menus retain game behavior. Manual HUD peek reveals the other managed player panels at full opacity; the Focus hint, switch hint and special-attack panel keep their own rules. Enemy health and directional indicators keep their configured behavior.
 
-The Sprint and Haste button prompts stay hidden while running. **Hide sprint/haste prompt** appears first in the single **HUD visibility** section. Turn off **Hide sprint/haste prompt** in the optional menu, or set `hideSprintPrompt = 0` in `settings.ini`, to restore them. Other action prompts retain game behavior, and manual HUD peek keeps running prompts hidden.
+The Sprint and Haste button prompts stay hidden while running. **Hide sprint/haste prompt** is in the **Action prompts** section. Turn off **Hide sprint/haste prompt** in the optional menu, or set `hideSprintPrompt = 0` in `settings.ini`, to restore them. Other action prompts retain game behavior, and manual HUD peek keeps running prompts hidden.
 
 The Toggle abilities hint (RT with the remapped controller layout) stays hidden in Focus mode and during manual HUD peek. Ability switching still works. Raise Focus activation prompt opacity above 0% to restore the hint.
 
@@ -39,6 +39,8 @@ Change Compass opacity in the optional menu, or edit `compassOpacity` in `settin
 ## Settings
 
 [Mod Setting Menu 1.0.5 or later](https://www.nexusmods.com/thebloodofdawnwalker/mods/271) is optional. To use it, open Main Menu > Mod Settings > All Mods, select Quiet Dawn, change settings, press Apply, then load a save. Restore discards unapplied changes; Reset selects this mod's defaults. The mod works and can be fully configured without this menu.
+
+Settings are grouped by HUD panel, with opacity and related thresholds or reveal durations together. Health and stamina shares the controls used by the human and vampire stat panels; Time of day and Quickslots each include their reveal duration. Combat cues keeps the counterattack, unblockable, parry, lock-icon and size controls together. HUD peek has its own section, and Logging remains the final entry under Diagnostics.
 
 ### Defaults without the menu
 
@@ -100,6 +102,33 @@ This mod includes the MIT-licensed [ue4ss-common Lua helpers](https://github.com
 
 [Mod Setting Menu 1.0.5 or later](https://www.nexusmods.com/thebloodofdawnwalker/mods/271) is optional. To use it, open Main Menu > Mod Settings > All Mods, select Quiet Dawn, change settings, press Apply, then load a save. Restore discards unapplied changes; Reset selects this mod's defaults. The mod works and can be fully configured without this menu.
 
+## Menu categories
+
+Settings are grouped by HUD panel, with opacity and related thresholds or reveal durations together. Health and stamina shares the controls used by the human and vampire stat panels; Time of day and Quickslots each include their reveal duration. Combat cues keeps the counterattack, unblockable, parry, lock-icon and size controls together. HUD peek has its own section, and Logging remains the final entry under Diagnostics.
+
+| Category | Controls |
+| --- | --- |
+| General | Enabled |
+| HUD peek | Show HUD on hold and its duration |
+| Enemies | Enemy health bars, names and difficulty icons |
+| Combat cues | Counterattack directions, unblockable warnings, parry cues, lock icon and cue size |
+| Health and stamina | Human and vampire panel opacity, health/blood and stamina thresholds, and their hold durations |
+| Time of day | Panel opacity and reveal duration |
+| Compass | Compass opacity |
+| Quest tracker | Quest tracker opacity |
+| Quickslots | Item and ability quickslot opacity, switch prompt opacity and switch reveal duration |
+| Crosshair | Crosshair opacity |
+| Combat focus | Combat focus panel opacity |
+| Focus charge | Focus charge bar opacity |
+| Focus activation prompt | Toggle abilities hint opacity |
+| Controls legend | Controls legend opacity |
+| Action prompts | Hide sprint/haste prompt |
+| Active buffs | Active buffs opacity |
+| Ability cooldowns | Ability cooldowns opacity |
+| Special attack cooldown | Special attack cooldown opacity |
+| Experience | Experience bar opacity |
+| Diagnostics | Logging |
+
 ## Default behavior
 
 On a fresh install with no saved or imported preferences, the mod is enabled and all 17 player HUD opacities start at 0% (automatic hiding and contextual reveals). Enemy health bars, enemy names, difficulty icons, and sprint/haste prompts are hidden. All four combat cue toggles are Off; cue size is 100%. Health/blood below 50% or stamina below 20% keeps the stat panels visible. Health alerts hold for 4 seconds and stamina alerts for 1.5 seconds. Holding Controls Legend reveals the HUD for 3 seconds; switching quickslots reveals them for 3 seconds; time changes reveal the time panel for 4 seconds. Logging is Off. Existing saved or supported imported preferences take precedence over these defaults.
@@ -130,11 +159,13 @@ Edit `settings.ini`, not `mod_settings.ini` (the optional menu definition), `Scr
 
 The stable menu ID is `oOCamilleOo_QuietDawnHUD`. The mod generates `settings.ini` beside `mod_settings.ini` in its UE4SS mod folder. This generated file is the authoritative settings store and is not shipped in the ZIP. Existing supported preferences are imported on first use. After the new settings are saved and verified, the successfully imported legacy files are deleted if their contents are unchanged. Migration or save failures retain the originals. Cleanup failures are logged and do not prevent using the new settings. Files left by an earlier migration are not deleted automatically. Back up `settings.ini` before removing/reinstalling the mod or moving its folder. Restore that backup into the same runtime folder before launching. Do not restore an old INI over it.
 
-Missing existing settings, duplicate or invalid settings stop configuration loading and are reported in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`. Preserve the file before correcting it. If a menu save fails, preserve its temporary/backup files and follow the menuâ€™s recovery instructions. Startup prepares the settings file once, including any supported upgrade. Gameplay reads a fresh settings snapshot when a save loads. Waiting at the main menu performs no recurring settings work; travel and possession events use the current snapshot. Settings are never polled. `debugLogging` controls additional diagnostic logging; it defaults to Off.
+Missing existing settings, duplicate or invalid settings stop configuration loading and are reported in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`. Preserve the file before correcting it. If a menu save fails, preserve its temporary/backup files and follow the menu’s recovery instructions. Startup prepares the settings file once, including any supported upgrade. Gameplay reads a fresh settings snapshot when a save loads. Waiting at the main menu performs no recurring settings work; travel and possession events use the current snapshot. Settings are never polled. `debugLogging` controls additional diagnostic logging; it defaults to Off.
 
 | Group | Setting | Choices or range |
 | --- | --- | --- |
 | General | Enabled | Off, On |
+| HUD peek | Show HUD on hold | Off, On |
+| HUD peek | Show HUD duration | 0 to 10 seconds in 0.5-second steps |
 | Enemies | Hide enemy health bars | Off, On (default On) |
 | Enemies | Hide enemy names | Off, On |
 | Enemies | Hide enemy difficulty icons | Off, On |
@@ -142,33 +173,31 @@ Missing existing settings, duplicate or invalid settings stop configuration load
 | Combat cues | Show unblockable warning | Off (default), On |
 | Combat cues | Show directional parry cues | Off (default), On |
 | Combat cues | Show lock icon | Off (default), On |
-| Combat cues | Combat cue size | 10%â€“200%, step 10%; default 100% |
-| Vitals | Keep health visible below | 0% to 100% in 5-point steps (default 50%) |
-| Vitals | Keep stamina visible below | 0% to 100% in 5-point steps (default 20%) |
-| Vitals | Health / blood hold duration | 0 to 10 seconds in 0.5-second steps |
-| Vitals | Stamina hold duration | 0 to 10 seconds in 0.5-second steps |
-| Vitals | Show HUD duration | 0 to 10 seconds in 0.5-second steps |
-| Vitals | Show HUD on hold | Off, On |
-| HUD visibility | Hide sprint/haste prompt | Off, On (default On) |
-| HUD visibility | Time of day opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Time of day reveal duration | 0 to 10 seconds in 0.5-second steps (default 4 seconds) |
-| HUD visibility | Show quickslots after switching | 0 to 10 seconds in 0.5-second steps (default 3; 0 disables) |
-| HUD visibility | Compass opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Human health and stamina opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Vampire blood and stamina opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Quest tracker opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Quickslots opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Crosshair opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Quickslot shortcuts opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Focus activation prompt opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Switch quickslots prompt opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Controls legend opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Active buffs opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Ability cooldowns opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Combat focus opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Focus charge opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Special attack cooldown opacity | 0% to 100% in 5-point steps |
-| HUD visibility | Experience bar opacity | 0% to 100% in 5-point steps |
+| Combat cues | Combat cue size | 10%–200%, step 10%; default 100% |
+| Health and stamina | Human health and stamina opacity | 0% to 100% in 5-point steps |
+| Health and stamina | Vampire blood and stamina opacity | 0% to 100% in 5-point steps |
+| Health and stamina | Keep health visible below | 0% to 100% in 5-point steps (default 50%) |
+| Health and stamina | Health / blood hold duration | 0 to 10 seconds in 0.5-second steps |
+| Health and stamina | Keep stamina visible below | 0% to 100% in 5-point steps (default 20%) |
+| Health and stamina | Stamina hold duration | 0 to 10 seconds in 0.5-second steps |
+| Time of day | Time of day opacity | 0% to 100% in 5-point steps |
+| Time of day | Time of day reveal duration | 0 to 10 seconds in 0.5-second steps (default 4 seconds) |
+| Compass | Compass opacity | 0% to 100% in 5-point steps |
+| Quest tracker | Quest tracker opacity | 0% to 100% in 5-point steps |
+| Quickslots | Quickslots opacity | 0% to 100% in 5-point steps |
+| Quickslots | Quickslot shortcuts opacity | 0% to 100% in 5-point steps |
+| Quickslots | Switch quickslots prompt opacity | 0% to 100% in 5-point steps |
+| Quickslots | Show quickslots after switching | 0 to 10 seconds in 0.5-second steps (default 3; 0 disables) |
+| Crosshair | Crosshair opacity | 0% to 100% in 5-point steps |
+| Combat focus | Combat focus opacity | 0% to 100% in 5-point steps |
+| Focus charge | Focus charge opacity | 0% to 100% in 5-point steps |
+| Focus activation prompt | Focus activation prompt opacity | 0% to 100% in 5-point steps |
+| Controls legend | Controls legend opacity | 0% to 100% in 5-point steps |
+| Action prompts | Hide sprint/haste prompt | Off, On (default On) |
+| Active buffs | Active buffs opacity | 0% to 100% in 5-point steps |
+| Ability cooldowns | Ability cooldowns opacity | 0% to 100% in 5-point steps |
+| Special attack cooldown | Special attack cooldown opacity | 0% to 100% in 5-point steps |
+| Experience | Experience bar opacity | 0% to 100% in 5-point steps |
 | Diagnostics | Logging | Off, On |
 
 Turn off **Hide enemy health bars** to restore ordinary enemy and boss health bars, end caps and boss health-phase indicators. Turn off **Hide enemy names** to restore name labels (boss names), or **Hide enemy difficulty icons** to restore difficulty indicators. All three choices are independent and restore the game's normal visibility for that information. Apply, then load a save. The player HUD peek keeps these choices in effect. At startup, older settings files receive any missing enemy-information options, set to On. Existing preferences and comments are preserved, with a backup before adding missing options.
@@ -199,7 +228,7 @@ Small blood fluctuations below 0.2% of bar capacity do not renew the health hold
 
 **Time of day:** 0% opacity hides the complete time panel between time changes and HUD peeks. Time changes reveal it at 100% and restart the reveal duration, which defaults to 4 seconds. Pausing preserves the remaining duration. Set the duration to 0 seconds to disable automatic time-change reveals; HUD peek still works. Positive opacity keeps the panel shown and does not use the timer. Existing settings gain these two options without resetting other preferences.
 
-**Hide sprint/haste prompt** is the first option in the single **HUD visibility** section. It suppresses only the running prompts, including during manual HUD peek. Other action prompts retain game behavior. Apply, then load a save. Existing settings receive the new option set to On, with their preferences and comments preserved.
+**Hide sprint/haste prompt** is in the **Action prompts** section. It suppresses only the running prompts, including during manual HUD peek. Other action prompts retain game behavior. Apply, then load a save. Existing settings receive the new option set to On, with their preferences and comments preserved.
 
 **Focus activation prompt opacity:** 0% keeps the Toggle abilities button and label hidden in Focus mode and during HUD peek. Positive values use the selected opacity when the game shows the prompt. Ability switching still works. Apply, then load a save.
 

@@ -4,7 +4,7 @@
 
 - Lower the health and blood regeneration reveal threshold from 1% to 0.2% of the bar, so smaller gains show the panel and refresh its health alert timer.
 
-- Fix duplicate HUD visibility sections by placing Hide sprint/haste prompt first with the other HUD controls.
+- Group settings by HUD panel, keeping related opacity, threshold and duration controls together. Retain a separate Combat cues section for indicators, warnings, the lock icon and cue size.
 
 - Clarify that Mod Setting Menu is optional, with fresh-install defaults and manual settings.ini configuration instructions.
 

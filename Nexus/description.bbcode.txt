@@ -47,6 +47,8 @@ Keep the world in view, with health and stamina returning when needed. Choose au
 
 With the optional menu, open Main Menu > Mod Settings > All Mods, select Quiet Dawn, adjust settings and press Apply, then load a save. Restore discards unapplied changes; Reset selects the defaults.
 
+Settings are grouped by HUD panel, with opacity and related thresholds or reveal durations together. Health and stamina shares the controls used by the human and vampire stat panels; Time of day and Quickslots each include their reveal duration. Combat cues keeps the counterattack, unblockable, parry, lock-icon and size controls together. HUD peek has its own section, and Logging remains the final entry under Diagnostics.
+
 Without the menu, launch the game once to generate the settings file. Close the game, back up that file and edit its existing [Settings] entries:
 
 [code]Dawnwalker/Binaries/Win64/ue4ss/Mods/QuietDawnHUD/settings.ini[/code]
