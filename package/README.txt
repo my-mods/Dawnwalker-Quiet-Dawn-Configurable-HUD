@@ -40,6 +40,8 @@ Only initialization, replacement and settings-load events apply transforms; ther
 
 ## Compass
 
+Compass size and opacity work independently. For a smaller, translucent compass, select 25% size and 40% opacity, press Apply, then load a save.
+
 Change Compass opacity in the optional menu, or edit `compassOpacity` in `settings.ini`: 0% hides it; 50% shows it at half opacity; 100% is fully opaque. No separate compass toggle is needed; opacity alone controls visibility. The old Show Compass variant is no longer needed; its preferences can be imported from your backed-up legacy Lua file on first use.
 
 ## Settings

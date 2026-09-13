@@ -136,7 +136,7 @@ local function valid(object)
     return object ~= nil and object:IsValid()
 end
 local function opacity(object, value)
-    Session.changeObject('opacity:'..tostring(object:GetAddress()), object,
+    return Session.changeObject('opacity:'..tostring(object:GetAddress()), object,
         'GetRenderOpacity', 'SetRenderOpacity', value)
 end
 local function sameObject(left, right)
@@ -836,13 +836,16 @@ local function panelStep(name)
             if switchVisible and target==0 and (name=="WBP_HUD_Quickslots" or name=="WBP_AA_Quickslots") then target=1 end
             if peekVisible and name~="WBP_HUD_Quickslots_ChangePrompt" and name~="WBP_HUD_SpecialAttackCooldown"
                 and name~="WBP_OpenFocusPrompt" then target=1 end
-            if current ~= target then
-                opacity(object, target)
-                if D.debugLogging then D.count("panelWrites");D.event("panel","name=%s opacity=%.3f->%.3f",name,current,target) end
+            -- UWidget stores float opacity: e.g. 0.4 returns 0.400000006.
+            -- Match the session journal's tolerance over the opacity range.
+            local wroteOpacity=false
+            if math.abs(current-target)>1e-5 then
+                wroteOpacity=opacity(object, target)
+                if wroteOpacity and D.debugLogging then D.count("panelWrites");D.event("panel","name=%s opacity=%.3f->%.3f",name,current,target) end
             end
             if panelScaling then
                 -- Keep opacity and each transform phase in separate frame slices.
-                if current~=target and panelScaling.pending(name,entry) then return false end
+                if wroteOpacity and panelScaling.pending(name,entry) then return false end
                 return panelScaling.step(name,object,entry)
             end
         elseif attempts < 120 then

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix panel size changes getting stuck at partial opacity, including a compass set to 25% size and 40% opacity.
+
 - Add independent size sliders for all 17 player HUD panels: 25% to 200% in 5% steps, default 100%, with screen-edge alignment.
 
 - Correct the health hold tooltip to show the 0.2% healing threshold.
