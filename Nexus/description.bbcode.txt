@@ -7,19 +7,20 @@ Keep the world in view, with health and stamina returning when needed. Choose au
 [list]
 [*][b][color=#A8D5C2]Warnings without constant clutter:[/color][/b] Health/blood and stamina return for resource alerts and stay visible below your chosen thresholds.
 [*][b][color=#A8D5C2]A quick check on demand:[/color][/b] Hold Controls Legend for a HUD peek. Switching items/abilities or advancing time briefly reveals the relevant panel.
-[*][b][color=#A8D5C2]Keep the help you want:[/color][/b] Adjust 17 panel opacities and choose which counterattack, unblockable, parry and lock-on cues to show.
+[*][b][color=#A8D5C2]Keep the help you want:[/color][/b] Adjust 17 panel opacities and sizes, and choose which counterattack, unblockable, parry and lock-on cues to show.
 [/list]
 
 [b][color=#A8D5C2]How the HUD refreshes:[/color][/b] Quiet Dawn uses game events and temporary timers, with no continuous HUD polling. Dynamic HUD 1.3 and HUD tweaks 5 combine event hooks with repeating checks.
 
-[b][color=#A8D5C2]Compared with [url=https://www.nexusmods.com/thebloodofdawnwalker/mods/344]Dynamic HUD[/url]:[/color][/b] Choose Quiet Dawn to keep your chosen HUD setup during exploration and combat. Choose Dynamic HUD if you want different panels to appear in Focus or when drawing a weapon, or want to resize them.
+[b][color=#A8D5C2]Compared with [url=https://www.nexusmods.com/thebloodofdawnwalker/mods/344]Dynamic HUD[/url]:[/color][/b] Choose Quiet Dawn to keep your chosen HUD setup during exploration and combat. Choose Dynamic HUD if you want different panels to appear in Focus or when drawing a weapon.
 
-[b][color=#A8D5C2]Compared with [url=https://www.nexusmods.com/thebloodofdawnwalker/mods/132]HUD tweaks[/url]:[/color][/b] Choose Quiet Dawn for an in-game menu to control visibility, alerts and combat indicators. Choose HUD tweaks if you want to move or resize HUD elements and see changes without reloading a save.
+[b][color=#A8D5C2]Compared with [url=https://www.nexusmods.com/thebloodofdawnwalker/mods/132]HUD tweaks[/url]:[/color][/b] Choose Quiet Dawn for an in-game menu to control visibility, alerts and combat indicators. Choose HUD tweaks if you want to move HUD elements and see changes without reloading a save.
 
 [size=4][b][color=#E8C88A]Features[/color][/b][/size]
 
 [list]
 [*][b][color=#A8D5C2]17 panel opacity controls:[/color][/b] Adjust each managed player panel from 0% to 100% in 5% steps. Zero uses automatic hiding and contextual reveals; a positive value sets its opacity while the game retains contextual visibility rules. Compass opacity alone controls the compass.
+[*][b][color=#A8D5C2]17 panel size controls:[/color][/b] All 17 player panels have independent size sliders from 25% to 200% in 5% steps, defaulting to 100%. Edge panels grow inward and centered panels stay centered. Original layout spacing stays fixed, so large sizes can overlap nearby elements. Apply, then load a save.
 [*][b][color=#A8D5C2]Health and stamina alerts:[/color][/b] At their default 0% opacity, both stat panels appear after damage, meaningful healing or stamina use. They remain visible while health/blood is strictly below 50% or stamina is strictly below 20%. Human health follows HP; vampire health follows the blood bar.
 [*][b][color=#A8D5C2]Adjustable hide delays:[/color][/b] Health alerts last 4 seconds and stamina alerts 1.5 seconds by default. Damage, stamina use and health/blood gains of at least 0.2% of the bar refresh their corresponding timers. Repeated qualifying regeneration gains keep health visible until its timer expires after the last gain. Smaller gains stay quiet; reaching full after a deficit of at least 0.2% briefly reveals health.
 [*][b][color=#A8D5C2]Manual HUD peek:[/color][/b] Hold Controls Legend (Menu on Xbox, Options on PlayStation, or L on keyboard by default) for a 3-second HUD peek. Repeat to refresh it. Automatic resource alerts resume afterward; enemy information and special prompt rules keep their settings.
@@ -47,7 +48,7 @@ Keep the world in view, with health and stamina returning when needed. Choose au
 
 With the optional menu, open Main Menu > Mod Settings > All Mods, select Quiet Dawn, adjust settings and press Apply, then load a save. Restore discards unapplied changes; Reset selects the defaults.
 
-Settings are grouped by HUD panel, with opacity and related thresholds or reveal durations together. Health and stamina shares the controls used by the human and vampire stat panels; Time of day and Quickslots each include their reveal duration. Combat cues keeps the counterattack, unblockable, parry, lock-icon and size controls together. HUD peek has its own section, and Logging remains the final entry under Diagnostics.
+Settings are grouped by HUD panel, with size immediately after opacity and related thresholds or reveal durations together. Health and stamina shares the controls used by the human and vampire stat panels; Time of day and Quickslots each include their reveal duration. Combat cues keeps the counterattack, unblockable, parry, lock-icon and size controls together. HUD peek has its own section, and Logging remains the final entry under Diagnostics.
 
 Without the menu, launch the game once to generate the settings file. Close the game, back up that file and edit its existing [Settings] entries:
 
@@ -62,7 +63,7 @@ hideEnemyHealthBars = 0
 hideEnemyNames = 0
 showDirectionalParry = 1[/code]
 
-Fresh settings enable the mod with all 17 panel opacities at 0%, enemy health bars/names/difficulty icons and running prompts hidden, all four combat cues Off, and Logging Off. Existing saved or supported imported preferences take precedence. All defaults, panel keys and ranges are listed in the included SETTINGS.md and the [url=https://github.com/my-mods/Dawnwalker-Quiet-Dawn-Configurable-HUD/blob/main/SETTINGS.md]settings reference[/url].
+Fresh settings enable the mod with all 17 panel opacities at 0% and panel sizes at 100%, enemy health bars/names/difficulty icons and running prompts hidden, all four combat cues Off, and Logging Off. Existing saved or supported imported preferences take precedence. All defaults, panel keys and ranges are listed in the included SETTINGS.md and the [url=https://github.com/my-mods/Dawnwalker-Quiet-Dawn-Configurable-HUD/blob/main/SETTINGS.md]settings reference[/url].
 
 [b][color=#A8D5C2]Logging:[/color][/b] The final menu option, or debugLogging = 1 in settings.ini, enables HUD diagnostics in Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log. Apply and load a save; restart to diagnose startup activation. Logging is Off by default.
 

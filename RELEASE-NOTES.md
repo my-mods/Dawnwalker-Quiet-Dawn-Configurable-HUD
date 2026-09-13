@@ -1,5 +1,9 @@
 # Quiet Dawn - Configurable HUD
 
+- Add independent size sliders for all 17 player HUD panels: 25% to 200% in 5% steps, default 100%, with screen-edge alignment.
+
+- Correct the health hold tooltip to show the 0.2% healing threshold.
+
 - Add Hide enemy health bars, an independent setting to restore ordinary enemy and boss health bars, end caps and boss health-phase indicators. Names and difficulty icons retain their separate toggles.
 
 - Lower the health and blood regeneration reveal threshold from 1% to 0.2% of the bar, so smaller gains show the panel and refresh its health alert timer.

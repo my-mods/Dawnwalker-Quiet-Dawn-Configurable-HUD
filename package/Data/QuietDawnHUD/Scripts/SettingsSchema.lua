@@ -6,9 +6,28 @@ local function choices(maximum, step)
 end
 local durations = choices(10, 0.5)
 local opacities = choices(100, 5)
+local panelSizes = {}
+for value=25,200,5 do panelSizes[#panelSizes+1]=value end
 local cueSizes = {}
 for value=10,200,10 do cueSizes[#cueSizes+1]=value end
 return {
+    {key="scale_HumanStats", default=100, values=panelSizes},
+    {key="scale_VampireStats", default=100, values=panelSizes},
+    {key="scale_WBP_Compass", default=100, values=panelSizes},
+    {key="scale_WBP_HUD_QuestInfo", default=100, values=panelSizes},
+    {key="scale_WBP_HUD_Quickslots", default=100, values=panelSizes},
+    {key="scale_Crosshair", default=100, values=panelSizes},
+    {key="scale_WBP_AA_Quickslots", default=100, values=panelSizes},
+    {key="scale_WBP_OpenFocusPrompt", default=100, values=panelSizes},
+    {key="scale_WBP_HUD_Quickslots_ChangePrompt", default=100, values=panelSizes},
+    {key="scale_WBP_ControlsLegend", default=100, values=panelSizes},
+    {key="scale_WBP_BuffContainer", default=100, values=panelSizes},
+    {key="scale_WBP_HUD_AbilityCooldownsContainer", default=100, values=panelSizes},
+    {key="scale_CombatFocusPanel", default=100, values=panelSizes},
+    {key="scale_WBP_HUD_FocusCharge_Bar", default=100, values=panelSizes},
+    {key="scale_WBP_HUD_SpecialAttackCooldown", default=100, values=panelSizes},
+    {key="scale_XPBar", default=100, values=panelSizes},
+    {key="scale_WBP_HudTimer", default=100, values=panelSizes},
     {key="hideSprintPrompt", default=1, values={0,1}},
     {key="enabled", default=1, values={0,1}},
     {key="hideEnemyHealthBars", default=1, values={0,1}},

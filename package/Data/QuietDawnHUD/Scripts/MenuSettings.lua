@@ -64,6 +64,7 @@ local values, err = Store.load(directory, compatibleSchema, function()
 end)
 if not values and err and err:match('^Missing setting:') then
     local defaults={hideEnemyHealthBars=1,showUnblockableWarning=0,showDirectionalParry=0,showLockIcon=0,combatCueSize=100,showCounterattackDirection=0,hideSprintPrompt=1,hideEnemyNames=1, hideEnemyDifficultyIcons=1, opacity_WBP_HudTimer=0, timeHoldSeconds=4, switchRevealSeconds=3}
+    for _, p in ipairs(panels) do defaults['scale_'..p]=100 end
     local path=Store.path(directory)
     local text=Store.read(path)
     -- New keys avoid interpreting an old On=1 switch as 1% opacity. Require
@@ -71,7 +72,7 @@ if not values and err and err:match('^Missing setting:') then
     -- rejected without replacing the original file.
     local legacySchema={}
     for _, row in ipairs(compatibleSchema) do
-        if not row.key:match('^opacity_') and row.key~='timeHoldSeconds' and row.key~='switchRevealSeconds' and row.key~='hideSprintPrompt'
+        if not row.key:match('^scale_') and not row.key:match('^opacity_') and row.key~='timeHoldSeconds' and row.key~='switchRevealSeconds' and row.key~='hideSprintPrompt'
             and row.key~='showCounterattackDirection' and row.key~='showUnblockableWarning'
             and row.key~='showDirectionalParry' and row.key~='showLockIcon' and row.key~='combatCueSize'
             and not row.key:match('^hideEnemy') then legacySchema[#legacySchema+1]=row end
@@ -86,7 +87,7 @@ if not values and err and err:match('^Missing setting:') then
         end
     end
     values, err = dofile(directory..'UE4SSCommonSettingsUpgrade.lua').ensure(
-        Store, path, compatibleSchema, defaults, 'enemy-health-bars')
+        Store, path, compatibleSchema, defaults, 'panel-scaling')
 end
 if values then
     local needsUpgrade=false
@@ -111,7 +112,9 @@ for _, key in ipairs({'healthThreshold','staminaThreshold','compassOpacity'}) do
 -- management; positive values keep a fixed opacity. The game's form/preset visibility restrictions remain intact.
 values.panels=panels
 values.panelOpacities={}
+values.panelScales={}
 for _, p in ipairs(panels) do
+    values.panelScales[p]=values['scale_'..p]/100
     values.panelOpacities[p]=p=='WBP_Compass' and values.compassOpacity or values['opacity_'..p]/100
 end
 values.dynamicPanels={HumanStats=values.opacity_HumanStats==0,VampireStats=values.opacity_VampireStats==0}

@@ -22,6 +22,12 @@ Health and blood gains of at least 0.2% of the bar reveal the stat panel and ref
 
 The time-of-day panel is hidden by default. It appears at full opacity when time advances, then hides 4 seconds after the last time change. Time of day reveal duration adjusts from 0 to 10 seconds in 0.5-second steps; 0 disables automatic reveals. A positive Time of day opacity keeps it shown at the selected opacity. HUD peek also reveals it.
 
+## Panel size
+
+All 17 player panels have independent size sliders from 25% to 200% in 5% steps, defaulting to 100%. Edge panels grow inward and centered panels stay centered. Original layout spacing stays fixed, so large sizes can overlap nearby elements. Apply, then load a save. Scaling uses each panel's original proportions, including its text and icons. Size is independent of opacity and contextual visibility; 0% opacity still allows a scaled panel to appear during its normal reveal.
+
+Only initialization, replacement and settings-load events apply transforms; there is no recurring size update. Returning to 100% or disabling the mod restores the original size and scaling origin.
+
 ## Requirements
 
 - **Optional:** [Mod Setting Menu 1.0.5 or later](https://www.nexusmods.com/thebloodofdawnwalker/mods/271) provides the in-game settings interface. Quiet Dawn works with its defaults and supports manual `settings.ini` editing without it.
@@ -40,11 +46,11 @@ Change Compass opacity in the optional menu, or edit `compassOpacity` in `settin
 
 [Mod Setting Menu 1.0.5 or later](https://www.nexusmods.com/thebloodofdawnwalker/mods/271) is optional. To use it, open Main Menu > Mod Settings > All Mods, select Quiet Dawn, change settings, press Apply, then load a save. Restore discards unapplied changes; Reset selects this mod's defaults. The mod works and can be fully configured without this menu.
 
-Settings are grouped by HUD panel, with opacity and related thresholds or reveal durations together. Health and stamina shares the controls used by the human and vampire stat panels; Time of day and Quickslots each include their reveal duration. Combat cues keeps the counterattack, unblockable, parry, lock-icon and size controls together. HUD peek has its own section, and Logging remains the final entry under Diagnostics.
+Settings are grouped by HUD panel, with size immediately after opacity and related thresholds or reveal durations together. Health and stamina shares the controls used by the human and vampire stat panels; Time of day and Quickslots each include their reveal duration. Combat cues keeps the counterattack, unblockable, parry, lock-icon and size controls together. HUD peek has its own section, and Logging remains the final entry under Diagnostics.
 
 ### Defaults without the menu
 
-On a fresh install with no saved or imported preferences, the mod is enabled and all 17 player HUD opacities start at 0% (automatic hiding and contextual reveals). Enemy health bars, enemy names, difficulty icons, and sprint/haste prompts are hidden. All four combat cue toggles are Off; cue size is 100%. Health/blood below 50% or stamina below 20% keeps the stat panels visible. Health alerts hold for 4 seconds and stamina alerts for 1.5 seconds. Holding Controls Legend reveals the HUD for 3 seconds; switching quickslots reveals them for 3 seconds; time changes reveal the time panel for 4 seconds. Logging is Off. Existing saved or supported imported preferences take precedence over these defaults.
+On a fresh install with no saved or imported preferences, the mod is enabled and all 17 player HUD opacities start at 0% (automatic hiding and contextual reveals). All panel sizes start at 100%. Enemy health bars, enemy names, difficulty icons, and sprint/haste prompts are hidden. All four combat cue toggles are Off; cue size is 100%. Health/blood below 50% or stamina below 20% keeps the stat panels visible. Health alerts hold for 4 seconds and stamina alerts for 1.5 seconds. Holding Controls Legend reveals the HUD for 3 seconds; switching quickslots reveals them for 3 seconds; time changes reveal the time panel for 4 seconds. Logging is Off. Existing saved or supported imported preferences take precedence over these defaults.
 
 ### Manual configuration without the menu
 
@@ -57,6 +63,7 @@ Example edits to the matching existing lines (this is not a complete settings fi
 
 ```ini
 compassOpacity = 50
+scale_WBP_Compass = 75
 opacity_Crosshair = 100
 hideSprintPrompt = 0
 hideEnemyHealthBars = 0
@@ -66,7 +73,7 @@ showCounterattackDirection = 1
 showDirectionalParry = 1
 ```
 
-This shows the compass at half opacity and the crosshair at full opacity when the game permits, restores running prompts and enemy health bars/names/difficulty icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
+This shows the compass at half opacity and 75% size and the crosshair at full opacity when the game permits, restores running prompts and enemy health bars/names/difficulty icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
 
 Edit `settings.ini`, not `mod_settings.ini` (the optional menu definition), `Scripts/QuietDawnDefaults.lua` (first-use defaults), or the old import-only files. The menu and manual editing use the same settings file, so adding or removing the menu does not require converting your preferences. Keep a backup before a Vortex reinstall.
 
@@ -104,7 +111,7 @@ This mod includes the MIT-licensed [ue4ss-common Lua helpers](https://github.com
 
 ## Menu categories
 
-Settings are grouped by HUD panel, with opacity and related thresholds or reveal durations together. Health and stamina shares the controls used by the human and vampire stat panels; Time of day and Quickslots each include their reveal duration. Combat cues keeps the counterattack, unblockable, parry, lock-icon and size controls together. HUD peek has its own section, and Logging remains the final entry under Diagnostics.
+Settings are grouped by HUD panel, with size immediately after opacity and related thresholds or reveal durations together. Health and stamina shares the controls used by the human and vampire stat panels; Time of day and Quickslots each include their reveal duration. Combat cues keeps the counterattack, unblockable, parry, lock-icon and size controls together. HUD peek has its own section, and Logging remains the final entry under Diagnostics.
 
 | Category | Controls |
 | --- | --- |
@@ -129,9 +136,19 @@ Settings are grouped by HUD panel, with opacity and related thresholds or reveal
 | Experience | Experience bar opacity |
 | Diagnostics | Logging |
 
+Each player-panel category also includes its size slider, directly after the matching opacity control. The 17 size sliders use 25% to 200%, in 5% steps, with a 100% default.
+
 ## Default behavior
 
-On a fresh install with no saved or imported preferences, the mod is enabled and all 17 player HUD opacities start at 0% (automatic hiding and contextual reveals). Enemy health bars, enemy names, difficulty icons, and sprint/haste prompts are hidden. All four combat cue toggles are Off; cue size is 100%. Health/blood below 50% or stamina below 20% keeps the stat panels visible. Health alerts hold for 4 seconds and stamina alerts for 1.5 seconds. Holding Controls Legend reveals the HUD for 3 seconds; switching quickslots reveals them for 3 seconds; time changes reveal the time panel for 4 seconds. Logging is Off. Existing saved or supported imported preferences take precedence over these defaults.
+On a fresh install with no saved or imported preferences, the mod is enabled and all 17 player HUD opacities start at 0% (automatic hiding and contextual reveals). All panel sizes start at 100%. Enemy health bars, enemy names, difficulty icons, and sprint/haste prompts are hidden. All four combat cue toggles are Off; cue size is 100%. Health/blood below 50% or stamina below 20% keeps the stat panels visible. Health alerts hold for 4 seconds and stamina alerts for 1.5 seconds. Holding Controls Legend reveals the HUD for 3 seconds; switching quickslots reveals them for 3 seconds; time changes reveal the time panel for 4 seconds. Logging is Off. Existing saved or supported imported preferences take precedence over these defaults.
+
+Older settings files receive missing panel size keys at 100%, preserving existing values, comments and prior backups. The original is backed up as `settings.ini.before-panel-scaling`. Existing malformed or duplicate values are rejected without replacing the file.
+
+## Panel size
+
+All 17 player panels have independent size sliders from 25% to 200% in 5% steps, defaulting to 100%. Edge panels grow inward and centered panels stay centered. Original layout spacing stays fixed, so large sizes can overlap nearby elements. Apply, then load a save. Scaling uses each panel's original proportions, including its text and icons. Size is independent of opacity and contextual visibility; 0% opacity still allows a scaled panel to appear during its normal reveal.
+
+Only initialization, replacement and settings-load events apply transforms; there is no recurring size update. Returning to 100% or disabling the mod restores the original size and scaling origin.
 
 ## Manual configuration
 
@@ -144,6 +161,7 @@ Example edits to the matching existing lines (this is not a complete settings fi
 
 ```ini
 compassOpacity = 50
+scale_WBP_Compass = 75
 opacity_Crosshair = 100
 hideSprintPrompt = 0
 hideEnemyHealthBars = 0
@@ -153,13 +171,13 @@ showCounterattackDirection = 1
 showDirectionalParry = 1
 ```
 
-This shows the compass at half opacity and the crosshair at full opacity when the game permits, restores running prompts and enemy health bars/names/difficulty icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
+This shows the compass at half opacity and 75% size and the crosshair at full opacity when the game permits, restores running prompts and enemy health bars/names/difficulty icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
 
 Edit `settings.ini`, not `mod_settings.ini` (the optional menu definition), `Scripts/QuietDawnDefaults.lua` (first-use defaults), or the old import-only files. The menu and manual editing use the same settings file, so adding or removing the menu does not require converting your preferences. Keep a backup before a Vortex reinstall.
 
 The stable menu ID is `oOCamilleOo_QuietDawnHUD`. The mod generates `settings.ini` beside `mod_settings.ini` in its UE4SS mod folder. This generated file is the authoritative settings store and is not shipped in the ZIP. Existing supported preferences are imported on first use. After the new settings are saved and verified, the successfully imported legacy files are deleted if their contents are unchanged. Migration or save failures retain the originals. Cleanup failures are logged and do not prevent using the new settings. Files left by an earlier migration are not deleted automatically. Back up `settings.ini` before removing/reinstalling the mod or moving its folder. Restore that backup into the same runtime folder before launching. Do not restore an old INI over it.
 
-Missing existing settings, duplicate or invalid settings stop configuration loading and are reported in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`. Preserve the file before correcting it. If a menu save fails, preserve its temporary/backup files and follow the menu’s recovery instructions. Startup prepares the settings file once, including any supported upgrade. Gameplay reads a fresh settings snapshot when a save loads. Waiting at the main menu performs no recurring settings work; travel and possession events use the current snapshot. Settings are never polled. `debugLogging` controls additional diagnostic logging; it defaults to Off.
+Missing existing settings, duplicate or invalid settings stop configuration loading and are reported in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`. Preserve the file before correcting it. If a menu save fails, preserve its temporary/backup files and follow the menu’s recovery instructions. Startup prepares the settings file once, including any supported upgrade. Gameplay reads a fresh settings snapshot when a save loads. Waiting at the main menu performs no recurring settings work; travel and possession events use the current snapshot. Settings are never polled. `debugLogging` controls additional diagnostic logging; it defaults to Off. Panel size diagnostics report applied sizes, bounded readiness failures and transform-write counts through the existing worker timing summary.
 
 | Group | Setting | Choices or range |
 | --- | --- | --- |
@@ -257,26 +275,43 @@ All entries below belong under `[Settings]`. Defaults apply to a fresh install w
 | Show HUD on hold | `manualPeek` | `1` | 0 = Off, 1 = On |
 | Hide sprint/haste prompt | `hideSprintPrompt` | `1` | 0 = Off, 1 = On |
 | Time of day opacity | `opacity_WBP_HudTimer` | `0` | 0 to 100, step 5 |
+| Time of day size | `scale_WBP_HudTimer` | `100` | 25 to 200, step 5 |
 | Time of day reveal duration | `timeHoldSeconds` | `4` | 0 to 10, step 0.5 |
 | Compass opacity | `compassOpacity` | `0` | 0 to 100 percent; 5-point steps match the menu |
+| Compass size | `scale_WBP_Compass` | `100` | 25 to 200, step 5 |
 | Human health and stamina opacity | `opacity_HumanStats` | `0` | 0 to 100, step 5 |
+| Human health and stamina size | `scale_HumanStats` | `100` | 25 to 200, step 5 |
 | Vampire blood and stamina opacity | `opacity_VampireStats` | `0` | 0 to 100, step 5 |
+| Vampire blood and stamina size | `scale_VampireStats` | `100` | 25 to 200, step 5 |
 | Quest tracker opacity | `opacity_WBP_HUD_QuestInfo` | `0` | 0 to 100, step 5 |
+| Quest tracker size | `scale_WBP_HUD_QuestInfo` | `100` | 25 to 200, step 5 |
 | Quickslots opacity | `opacity_WBP_HUD_Quickslots` | `0` | 0 to 100, step 5 |
+| Quickslots size | `scale_WBP_HUD_Quickslots` | `100` | 25 to 200, step 5 |
 | Crosshair opacity | `opacity_Crosshair` | `0` | 0 to 100, step 5 |
+| Crosshair size | `scale_Crosshair` | `100` | 25 to 200, step 5 |
 | Quickslot shortcuts opacity | `opacity_WBP_AA_Quickslots` | `0` | 0 to 100, step 5 |
+| Quickslot shortcuts size | `scale_WBP_AA_Quickslots` | `100` | 25 to 200, step 5 |
 | Focus activation prompt opacity | `opacity_WBP_OpenFocusPrompt` | `0` | 0 to 100, step 5 |
+| Focus activation prompt size | `scale_WBP_OpenFocusPrompt` | `100` | 25 to 200, step 5 |
 | Switch quickslots prompt opacity | `opacity_WBP_HUD_Quickslots_ChangePrompt` | `0` | 0 to 100, step 5 |
+| Switch quickslots prompt size | `scale_WBP_HUD_Quickslots_ChangePrompt` | `100` | 25 to 200, step 5 |
 | Controls legend opacity | `opacity_WBP_ControlsLegend` | `0` | 0 to 100, step 5 |
+| Controls legend size | `scale_WBP_ControlsLegend` | `100` | 25 to 200, step 5 |
 | Active buffs opacity | `opacity_WBP_BuffContainer` | `0` | 0 to 100, step 5 |
+| Active buffs size | `scale_WBP_BuffContainer` | `100` | 25 to 200, step 5 |
 | Ability cooldowns opacity | `opacity_WBP_HUD_AbilityCooldownsContainer` | `0` | 0 to 100, step 5 |
+| Ability cooldowns size | `scale_WBP_HUD_AbilityCooldownsContainer` | `100` | 25 to 200, step 5 |
 | Combat focus opacity | `opacity_CombatFocusPanel` | `0` | 0 to 100, step 5 |
+| Combat focus size | `scale_CombatFocusPanel` | `100` | 25 to 200, step 5 |
 | Focus charge opacity | `opacity_WBP_HUD_FocusCharge_Bar` | `0` | 0 to 100, step 5 |
+| Focus charge size | `scale_WBP_HUD_FocusCharge_Bar` | `100` | 25 to 200, step 5 |
 | Special attack cooldown opacity | `opacity_WBP_HUD_SpecialAttackCooldown` | `0` | 0 to 100, step 5 |
+| Special attack cooldown size | `scale_WBP_HUD_SpecialAttackCooldown` | `100` | 25 to 200, step 5 |
 | Experience bar opacity | `opacity_XPBar` | `0` | 0 to 100, step 5 |
+| Experience bar size | `scale_XPBar` | `100` | 25 to 200, step 5 |
 | Show quickslots after switching | `switchRevealSeconds` | `3` | 0 to 10, step 0.5 |
 | Logging | `debugLogging` | `0` | 0 = Off, 1 = On |
 
-A panel opacity of 0 retains automatic behavior; positive opacity keeps that panel at the chosen opacity subject to game visibility rules. Timers accept 0 to 10 seconds in 0.5-second steps; 0 disables that timed reveal without disabling independent low-resource triggers. Percentages are stored on a 0 to 100 scale. Combat cue size accepts 10 to 200 in 10-point steps.
+A panel opacity of 0 retains automatic behavior; positive opacity keeps that panel at the chosen opacity subject to game visibility rules. Timers accept 0 to 10 seconds in 0.5-second steps; 0 disables that timed reveal without disabling independent low-resource triggers. Opacity and threshold percentages are stored on a 0 to 100 scale. Panel sizes accept 25 to 200 in 5-point steps. Combat cue size accepts 10 to 200 in 10-point steps.
 
 If a value is malformed, duplicated, missing, or outside the supported range, the settings loader reports it in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`. Correct the existing line or restore your backup, then restart and load a save.

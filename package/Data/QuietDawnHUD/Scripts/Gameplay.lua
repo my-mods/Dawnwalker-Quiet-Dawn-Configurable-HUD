@@ -65,7 +65,16 @@ end
 local statNames = {}
 local dynamicPanels = config.dynamicPanels or {HumanStats=true, VampireStats=true}
 local panelOpacities = config.panelOpacities or {}
+local panelScales = config.panelScales or {}
+local hasPanelScaling=false
 for _, name in ipairs(names) do
+    local scale=panelScales[name] or 1
+    if type(scale)~="number" or scale~=scale or scale<0.25 or scale>2
+        or math.abs(scale*20-math.floor(scale*20+0.5))>1e-6 then
+        print("[Quiet Dawn - Configurable HUD] Invalid panel size; disabled.")
+        return
+    end
+    if scale~=1 then hasPanelScaling=true end
     local value=panelOpacities[name]
     if value~=nil and (type(value)~="number" or value~=value or value<0 or value>1) then
         print("[Quiet Dawn - Configurable HUD] Invalid panel opacity; disabled.")
@@ -75,6 +84,7 @@ for _, name in ipairs(names) do
         statNames[#statNames+1]=name
     end
 end
+local panelScaling=hasPanelScaling and require("QuietDawnPanelScale").new(panelScales,D,Session) or nil
 local manualPeekEnabled=config.manualPeek and config.manualPeekSeconds>0 and #names>0
 local timeRevealEnabled=seen.WBP_HudTimer and (panelOpacities.WBP_HudTimer or 0)==0 and config.timeHoldSeconds>0
 if type(ExecuteInGameThreadWithDelay) ~= "function" or type(CancelDelayedAction) ~= "function" then
@@ -830,6 +840,11 @@ local function panelStep(name)
                 opacity(object, target)
                 if D.debugLogging then D.count("panelWrites");D.event("panel","name=%s opacity=%.3f->%.3f",name,current,target) end
             end
+            if panelScaling then
+                -- Keep opacity and each transform phase in separate frame slices.
+                if current~=target and panelScaling.pending(name,entry) then return false end
+                return panelScaling.step(name,object,entry)
+            end
         elseif attempts < 120 then
             attempts=attempts+1
             return false
@@ -1006,6 +1021,7 @@ local function repeatUntilDone(delay,fn)
 end
 wake = function(statsOnly)
     if not statsOnly then
+        if panelScaling then panelScaling.recover() end
         if failedHooks.resource then
             statHookFailures=false
             statsRefresh=true
