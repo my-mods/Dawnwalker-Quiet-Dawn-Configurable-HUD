@@ -5,6 +5,7 @@ A quiet view of the world, with health and stamina returning when needed.
 For **The Blood of Dawnwalker**. Combat, drawing a weapon, lock-on, and focus no longer reveal the general HUD.
 
 - **Enemy information:** health bars, names and difficulty icons are hidden by default, with three independent settings in the optional menu or `settings.ini`. Turn off **Hide enemy health bars** to restore ordinary enemy and boss health bars, their end caps and boss health-phase indicators. Turn off **Hide enemy names** to restore name labels (boss names). Enemy stamina and wounds retain game behavior; combat warnings follow the separate cue settings.
+- **Claw slash marks:** **Hide claw slash marks** hides the red Shredded Touch slash effects on enemies, including the sword variant. It defaults to On and changes only these visuals; damage, bleeding and ordinary blood effects keep their game behavior. Turn it Off under **Enemies**, or set `hideClawSlashMarks = 0` in `settings.ini`, to show the marks again. Apply, then load a save.
 - **Enemy lock-on marker:** Four independent Combat cues toggles control counterattack directions, unblockable warnings, directional parry cues and the lock icon. All default to Off. The center dot is always hidden; directions hide the center lock icon.
 - **Player health and stamina:** at their default 0% setting, shown together at full opacity after damage, meaningful healing or stamina use, while health is strictly below **50%**, or while stamina is strictly below **20%**. Vampire health follows the blood bar; human health follows HP.
 - **Hide delay:** **4 seconds** after the last health/blood alert; **1.5 seconds** after the last stamina drop. Further meaningful drops restart the relevant delay; blood fluctuations smaller than 0.2% of the bar do not keep renewing it. Low health or stamina keeps the panel visible without a timeout. Exactly 50% health or 20% stamina does not qualify by itself.
@@ -99,7 +100,9 @@ Enemy health hiding uses the named health widgets verified in Steam build 252321
 
 Combat cue changes use the existing marker construction, icon-render and lock events. Each update touches a fixed set of named child widgets; no widget-tree search or recurring timer is added. Parry and counterattack directions suppress center icons, and the lock toggle shows a padlock only on a hard-locked target between cues. The game retains control of distance fading and overall widget visibility. Readiness retries and the 64-entry marker cache/queue remain bounded. Logging reports the observed state, selected cue, size and readiness failures.
 
-There are no global HUD searches, widget-tree walks, class-default changes, or recurring configuration reads. The panel worker terminates after each job. Resource events that leave visibility unchanged do not revisit panels. Resource visibility changes revisit only the two stat panels; unrelated HUD fields are checked on lifecycle/preset events and when a manual peek begins or ends. Missing fields are not retried on each resource change. Setting both stat panels to a positive opacity disables resource hooks and reads. Manual HUD peek remains available and temporarily shows the managed panels at 100%, then restores their selected opacity or automatic behavior.
+Claw slash hiding clears only the visual reference on two named static gameplay cues. The native effect handler skips empty references; session cleanup restores each original effect when still owned by the mod. Cue construction and save loads schedule bounded work on the shared HUD worker, with no per-hit hook. Logging includes cue names, applied/restored effect counts and readiness failures.
+
+There are no global HUD searches, widget-tree walks, or recurring configuration reads. The panel worker terminates after each job. Resource events that leave visibility unchanged do not revisit panels. Resource visibility changes revisit only the two stat panels; unrelated HUD fields are checked on lifecycle/preset events and when a manual peek begins or ends. Missing fields are not retried on each resource change. Setting both stat panels to a positive opacity disables resource hooks and reads. Manual HUD peek remains available and temporarily shows the managed panels at 100%, then restores their selected opacity or automatic behavior.
 
 ## License
 
@@ -119,7 +122,7 @@ Settings are grouped by HUD panel, with size immediately after opacity and relat
 | --- | --- |
 | General | Enabled |
 | HUD peek | Show HUD on hold and its duration |
-| Enemies | Enemy health bars, names and difficulty icons |
+| Enemies | Enemy health bars, names, difficulty icons and claw slash marks |
 | Combat cues | Counterattack directions, unblockable warnings, parry cues, lock icon and cue size |
 | Health and stamina | Human and vampire panel opacity, health/blood and stamina thresholds, and their hold durations |
 | Time of day | Panel opacity and reveal duration |
@@ -142,9 +145,15 @@ Each player-panel category also includes its size slider, directly after the mat
 
 ## Default behavior
 
-On a fresh install with no saved or imported preferences, the mod is enabled and all 17 player HUD opacities start at 0% (automatic hiding and contextual reveals). All panel sizes start at 100%. Enemy health bars, enemy names, difficulty icons, and sprint/haste prompts are hidden. All four combat cue toggles are Off; cue size is 100%. Health/blood below 50% or stamina below 20% keeps the stat panels visible. Health alerts hold for 4 seconds and stamina alerts for 1.5 seconds. Holding Controls Legend reveals the HUD for 3 seconds; switching quickslots reveals them for 3 seconds; time changes reveal the time panel for 4 seconds. Logging is Off. Existing saved or supported imported preferences take precedence over these defaults.
+On a fresh install with no saved or imported preferences, the mod is enabled and all 17 player HUD opacities start at 0% (automatic hiding and contextual reveals). All panel sizes start at 100%. Enemy health bars, enemy names, difficulty icons, claw slash marks, and sprint/haste prompts are hidden. All four combat cue toggles are Off; cue size is 100%. Health/blood below 50% or stamina below 20% keeps the stat panels visible. Health alerts hold for 4 seconds and stamina alerts for 1.5 seconds. Holding Controls Legend reveals the HUD for 3 seconds; switching quickslots reveals them for 3 seconds; time changes reveal the time panel for 4 seconds. Logging is Off. Existing saved or supported imported preferences take precedence over these defaults.
 
-Older settings files receive missing panel size keys at 100%, preserving existing values, comments and prior backups. The original is backed up as `settings.ini.before-panel-scaling`. Existing malformed or duplicate values are rejected without replacing the file.
+Older settings files receive missing panel size keys at 100%, preserving existing values, comments and prior backups. The current upgrade uses `settings.ini.before-claw-slash-marks`; older `settings.ini.before-panel-scaling` backups are retained. Existing malformed or duplicate values are rejected without replacing the file.
+
+## Claw slash marks
+
+**Hide claw slash marks** hides the red Shredded Touch slash effects on enemies, including the sword variant. It defaults to On and changes only these visuals; damage, bleeding and ordinary blood effects keep their game behavior. Turn it Off under **Enemies**, or set `hideClawSlashMarks = 0` in `settings.ini`, to show the marks again. Apply, then load a save.
+
+Existing settings gain only the missing `hideClawSlashMarks = 1` entry, with a `settings.ini.before-claw-slash-marks` backup. Existing preferences, comments and older backups are preserved.
 
 ## Panel size
 
@@ -189,6 +198,7 @@ Missing existing settings, duplicate or invalid settings stop configuration load
 | Enemies | Hide enemy health bars | Off, On (default On) |
 | Enemies | Hide enemy names | Off, On |
 | Enemies | Hide enemy difficulty icons | Off, On |
+| Enemies | Hide claw slash marks | Off, On (default On) |
 | Combat cues | Show counterattack direction | Off (default), On |
 | Combat cues | Show unblockable warning | Off (default), On |
 | Combat cues | Show directional parry cues | Off (default), On |
@@ -264,6 +274,7 @@ All entries below belong under `[Settings]`. Defaults apply to a fresh install w
 | Hide enemy health bars | `hideEnemyHealthBars` | `1` | 0 = Off, 1 = On |
 | Hide enemy names | `hideEnemyNames` | `1` | 0 = Off, 1 = On |
 | Hide enemy difficulty icons | `hideEnemyDifficultyIcons` | `1` | 0 = Off, 1 = On |
+| Hide claw slash marks | `hideClawSlashMarks` | `1` | 0 = Off, 1 = On |
 | Show counterattack direction | `showCounterattackDirection` | `0` | 0 = Off, 1 = On |
 | Show unblockable warning | `showUnblockableWarning` | `0` | 0 = Off, 1 = On |
 | Show directional parry cues | `showDirectionalParry` | `0` | 0 = Off, 1 = On |

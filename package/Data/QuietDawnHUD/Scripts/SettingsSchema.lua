@@ -31,6 +31,7 @@ return {
     {key="hideSprintPrompt", default=1, values={0,1}},
     {key="enabled", default=1, values={0,1}},
     {key="hideEnemyHealthBars", default=1, values={0,1}},
+    {key="hideClawSlashMarks", default=1, values={0,1}},
     {key="hideEnemyNames", default=1, values={0,1}},
     {key="hideEnemyDifficultyIcons", default=1, values={0,1}},
     {key="showCounterattackDirection", default=0, values={0,1}},

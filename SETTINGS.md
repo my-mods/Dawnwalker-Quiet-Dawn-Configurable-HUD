@@ -10,7 +10,7 @@ Settings are grouped by HUD panel, with size immediately after opacity and relat
 | --- | --- |
 | General | Enabled |
 | HUD peek | Show HUD on hold and its duration |
-| Enemies | Enemy health bars, names and difficulty icons |
+| Enemies | Enemy health bars, names, difficulty icons and claw slash marks |
 | Combat cues | Counterattack directions, unblockable warnings, parry cues, lock icon and cue size |
 | Health and stamina | Human and vampire panel opacity, health/blood and stamina thresholds, and their hold durations |
 | Time of day | Panel opacity and reveal duration |
@@ -33,9 +33,15 @@ Each player-panel category also includes its size slider, directly after the mat
 
 ## Default behavior
 
-On a fresh install with no saved or imported preferences, the mod is enabled and all 17 player HUD opacities start at 0% (automatic hiding and contextual reveals). All panel sizes start at 100%. Enemy health bars, enemy names, difficulty icons, and sprint/haste prompts are hidden. All four combat cue toggles are Off; cue size is 100%. Health/blood below 50% or stamina below 20% keeps the stat panels visible. Health alerts hold for 4 seconds and stamina alerts for 1.5 seconds. Holding Controls Legend reveals the HUD for 3 seconds; switching quickslots reveals them for 3 seconds; time changes reveal the time panel for 4 seconds. Logging is Off. Existing saved or supported imported preferences take precedence over these defaults.
+On a fresh install with no saved or imported preferences, the mod is enabled and all 17 player HUD opacities start at 0% (automatic hiding and contextual reveals). All panel sizes start at 100%. Enemy health bars, enemy names, difficulty icons, claw slash marks, and sprint/haste prompts are hidden. All four combat cue toggles are Off; cue size is 100%. Health/blood below 50% or stamina below 20% keeps the stat panels visible. Health alerts hold for 4 seconds and stamina alerts for 1.5 seconds. Holding Controls Legend reveals the HUD for 3 seconds; switching quickslots reveals them for 3 seconds; time changes reveal the time panel for 4 seconds. Logging is Off. Existing saved or supported imported preferences take precedence over these defaults.
 
-Older settings files receive missing panel size keys at 100%, preserving existing values, comments and prior backups. The original is backed up as `settings.ini.before-panel-scaling`. Existing malformed or duplicate values are rejected without replacing the file.
+Older settings files receive missing panel size keys at 100%, preserving existing values, comments and prior backups. The current upgrade uses `settings.ini.before-claw-slash-marks`; older `settings.ini.before-panel-scaling` backups are retained. Existing malformed or duplicate values are rejected without replacing the file.
+
+## Claw slash marks
+
+**Hide claw slash marks** hides the red Shredded Touch slash effects on enemies, including the sword variant. It defaults to On and changes only these visuals; damage, bleeding and ordinary blood effects keep their game behavior. Turn it Off under **Enemies**, or set `hideClawSlashMarks = 0` in `settings.ini`, to show the marks again. Apply, then load a save.
+
+Existing settings gain only the missing `hideClawSlashMarks = 1` entry, with a `settings.ini.before-claw-slash-marks` backup. Existing preferences, comments and older backups are preserved.
 
 ## Panel size
 
@@ -80,6 +86,7 @@ Missing existing settings, duplicate or invalid settings stop configuration load
 | Enemies | Hide enemy health bars | Off, On (default On) |
 | Enemies | Hide enemy names | Off, On |
 | Enemies | Hide enemy difficulty icons | Off, On |
+| Enemies | Hide claw slash marks | Off, On (default On) |
 | Combat cues | Show counterattack direction | Off (default), On |
 | Combat cues | Show unblockable warning | Off (default), On |
 | Combat cues | Show directional parry cues | Off (default), On |
@@ -155,6 +162,7 @@ All entries below belong under `[Settings]`. Defaults apply to a fresh install w
 | Hide enemy health bars | `hideEnemyHealthBars` | `1` | 0 = Off, 1 = On |
 | Hide enemy names | `hideEnemyNames` | `1` | 0 = Off, 1 = On |
 | Hide enemy difficulty icons | `hideEnemyDifficultyIcons` | `1` | 0 = Off, 1 = On |
+| Hide claw slash marks | `hideClawSlashMarks` | `1` | 0 = Off, 1 = On |
 | Show counterattack direction | `showCounterattackDirection` | `0` | 0 = Off, 1 = On |
 | Show unblockable warning | `showUnblockableWarning` | `0` | 0 = Off, 1 = On |
 | Show directional parry cues | `showDirectionalParry` | `0` | 0 = Off, 1 = On |

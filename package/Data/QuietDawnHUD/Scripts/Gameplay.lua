@@ -1,7 +1,7 @@
 local D = require("QuietDawnDiagnostics")
 -- Quiet Dawn - Configurable HUD | MIT License
 -- Event-driven panel opacity. No widget-tree walks, global object searches,
--- class-default edits, animation hooks, or Lua coroutines.
+-- animation hooks, or Lua coroutines. Claw marks use two named cue defaults.
 -- Resource reads run only on resource-change and HUD/player lifecycle events.
 local ok, config = pcall(require, "MenuSettings")
 if SaveLoadDiagnostics and ok and type(config)=="table" then
@@ -131,7 +131,7 @@ local function reportHookError(path, success, pre, post)
 end
 local warned = false
 local frameClock, lastFrame
-local wake, armExpiry
+local wake, armExpiry, clawMarks
 local function valid(object)
     return object ~= nil and object:IsValid()
 end
@@ -869,6 +869,10 @@ local timeTurn=false
 local function step()
     -- At most one hook registration OR one state snapshot OR one direct panel
     -- read/write per callback. 16 ms delay yields to a later game frame.
+    if clawMarks and clawMarks.pending() then
+        clawMarks.step()
+        return false
+    end
     if hookIndex <= #specs then
         if hookIndex > 3 and candidate == nil and not valid(hud) then
             worker=false
@@ -1035,7 +1039,7 @@ wake = function(statsOnly)
         absent={}
         settingsPending,settingsAttempts=true,0
     end
-    if statsOnly~="marker" and statsOnly~="settings" and statsOnly~="resource" and statsOnly~="enemyHealth" and statsOnly~="time" and statsOnly~="sprintPrompt" then dirty=true end
+    if statsOnly~="marker" and statsOnly~="settings" and statsOnly~="resource" and statsOnly~="enemyHealth" and statsOnly~="time" and statsOnly~="sprintPrompt" and statsOnly~="clawMarks" then dirty=true end
     if worker then if D.debugLogging then D.count("workerCoalesced") end; return end
     worker=true
     if D.debugLogging then D.count("workerStarts") end
@@ -1063,6 +1067,9 @@ wake = function(statsOnly)
         end
         return stop
     end)
+end
+if config.hideClawSlashMarks then
+    clawMarks=require('QuietDawnClawMarks').new(D,Session,function()wake('clawMarks')end)
 end
 local subscribed = pcall(NotifyOnNewObject, ROOT, function(object)
     candidate=object -- construction is not readiness: defer all object reads
