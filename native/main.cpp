@@ -64,7 +64,9 @@ constexpr std::array specs{
     // Observe the icon render helpers as well as the event wrappers: native
     // graph dispatch can skip the wrappers. Lua must not call these helpers.
     Spec{MARKER L"Display Icon State Directionally"},
-    Spec{MARKER L"Display Icon State Non-Directionally"}
+    Spec{MARKER L"Display Icon State Non-Directionally"},
+    // Direct time-display calls can bypass the graph-entry wrapper.
+    Spec{L"/Game/_Dawnwalker/UI/_Unified/HUD/Timer/WBP_HudTimer.WBP_HudTimer_C:Update Time Display"}
 };
 struct Scalar { int offset{}, bytes{}; };
 struct Binding { UFunction* node{}; QuietDawn::ObjectIdentity identity; std::array<Scalar,2> params{}; };

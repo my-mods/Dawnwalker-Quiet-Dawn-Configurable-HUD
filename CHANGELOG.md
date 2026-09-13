@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix the time panel missing activity time advances, including shrine restoration, and preserve its reveal while the activity hides the HUD.
+
 - Organize menu categories into Player status, Combat, Exploration and Controls, alphabetically within each group, with General first and Diagnostics last.
 
 - Fix panel size changes getting stuck at partial opacity, including a compass set to 25% size and 40% opacity.

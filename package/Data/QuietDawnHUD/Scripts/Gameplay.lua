@@ -117,6 +117,7 @@ local statHookFailures, hookAttempt = false, 0
 local failedHooks = {}
 local timeRequested,timeDirty,timeVisible,timeUntil=false,false,false,0
 local timeJobNames={"WBP_HudTimer"}
+local timeWatcher=timeRevealEnabled and require("QuietDawnTime").new(D) or nil
 local peekRequested,peekUntil,peekVisible=false,0,false
 local switchRequested,switchUntil,switchVisible=false,0,false
 local switchCursor=0
@@ -213,23 +214,23 @@ local function peekInput(context,entryParam)
     if D.debugLogging then D.count("manualPeekRequests") end
     wake("resource")
 end
--- Stock time-change delegates enter this graph at 455 (build 25232147).
--- Filter before object reads; initialization, previews and animation updates
--- must not reveal the panel. No borrowed DayTime structs cross callbacks.
+-- The time graph can be bypassed by direct Blueprint dispatch. Observe its
+-- display helper too; actual-time snapshots exclude initialization/previews.
 local TIME="/Game/_Dawnwalker/UI/_Unified/HUD/Timer/WBP_HudTimer.WBP_HudTimer_C"
+local function timeDisplayUpdated(context,confirmed)
+    if not timeRevealEnabled or not timeWatcher then return end
+    local object=unwrap(context)
+    if not valid(hud) or not valid(controller) or not valid(object)
+        or not sameObject(hud.WBP_HudTimer,object)
+        or not sameObject(object:GetOwningPlayer(),controller)
+        or not sameObject(object:GetWorld(),world) then return end
+    timeWatcher.queue(confirmed==true)
+    wake("time")
+end
 local function timeChanged(context,entryParam)
     if not timeRevealEnabled then return end
     if tonumber(unwrap(entryParam))~=455 then return end
-    local object=unwrap(context)
-    if not valid(hud) or not valid(controller) or not valid(object) or not valid(frameClock)
-        or not sameObject(hud.WBP_HudTimer,object)
-        or not sameObject(object:GetOwningPlayer(),controller) then return end
-    -- Capture the deadline with the event, so another pending HUD pass cannot
-    -- extend a reveal by delaying this panel's turn in the worker.
-    timeUntil=frameClock:GetGameTimeInSeconds(controller)+config.timeHoldSeconds
-    timeRequested=true
-    if D.debugLogging then D.count("timeChangeEvents") end
-    wake("time")
+    timeDisplayUpdated(context,true)
 end
 -- The game shares this widget between neutral lock-on, directions and cues.
 -- Each cue category follows its own Quiet Dawn setting; the dot stays hidden.
@@ -537,7 +538,11 @@ local function promptEvent(context)
         wake("sprintPrompt")
     end
 end
-local function signal() if D.debugLogging then D.count("presetEvents") end;wake() end
+local function signal()
+    if D.debugLogging then D.count("presetEvents") end
+    if timeWatcher then timeWatcher.resume() end
+    wake()
+end
 local function capture(context)
     statsRefresh=true
     candidate = unwrap(context)
@@ -619,6 +624,7 @@ if sprintPrompts then
 end
 if timeRevealEnabled then
     specs[#specs+1]={path=TIME..":ExecuteUbergraph_WBP_HudTimer", callback=timeChanged, optional="time"}
+    specs[#specs+1]={path=TIME..":Update Time Display", callback=timeDisplayUpdated, optional="time"}
 end
 if seen.WBP_HUD_SpecialAttackCooldown and (panelOpacities.WBP_HUD_SpecialAttackCooldown or 0)==0 then
     specs[#specs+1]={path=SPECIAL..":SetupCooldownEffect", callback=cooldownEvent, optional="panel"}
@@ -687,6 +693,7 @@ local function accept(object)
     if valid(controller) and not sameObject(controller,pc) then return false, "controller mismatch" end
     if not sameObject(object,hud) or not sameObject(objectWorld,world) then
         hud, world, panels, absent = object, objectWorld, {}, {}
+        if timeWatcher then timeWatcher.reset() end
         lastPawnAddress, lastCombatAddress, previousHealth, previousStamina = nil, nil, nil, nil
         lastBloodAddress,lastForm=nil,nil
         lastBloodCapacity=nil
@@ -702,6 +709,7 @@ local function accept(object)
         if D.debugLogging then D.event("lifecycle","HUD/world changed; cached state reset") end
     end
     controller = pc
+    if timeWatcher then timeWatcher.resume() end
     hudAddress, controllerAddress = object:GetAddress(), pc:GetAddress()
     if sprintPrompts then sprintPrompts.queue(object) end
     if manualPeekEnabled then
@@ -913,6 +921,7 @@ local function panelStep(name)
     return true
 end
 local timeTurn=false
+local timeSampleTurn=false
 local function step()
     if livePending then applyLiveSettings(true);return false end
     -- At most one hook registration OR one state snapshot OR one direct panel
@@ -949,6 +958,18 @@ local function step()
             and sameObject(hud:GetOwningPlayer(),controller) then sprintPrompts.step(hud)
         else sprintPrompts.cancel() end
         return false
+    end
+    timeSampleTurn=not timeSampleTurn
+    if timeSampleTurn and timeWatcher and timeWatcher.pending() and candidate==nil then
+        if valid(hud) and valid(controller) and sameObject(hud:GetWorld(),world)
+            and sameObject(controller:GetWorld(),world) and sameObject(hud:GetOwningPlayer(),controller) then
+            if timeWatcher.step(hud,hud.WBP_HudTimer) then
+                timeUntil=frameClock:GetGameTimeInSeconds(controller)+config.timeHoldSeconds
+                timeRequested=true
+                if D.debugLogging then D.count("timeChangeEvents") end
+            end
+        else timeWatcher.cancel() end
+        return false -- subsystem reads get their own worker frame
     end
     -- A short time reveal must not wait behind a full quickslot/peek pass.
     -- Consume coalesced deadlines cheaply; only visibility changes take a
@@ -1015,7 +1036,7 @@ local function step()
         return false
     end
     if cursor==0 and not dirty then
-        if switchCursor>0 or timeRequested or markersReady() or healthReady() or promptsReady() then return false end
+        if switchCursor>0 or timeRequested or (timeWatcher and timeWatcher.pending()) or markersReady() or healthReady() or promptsReady() then return false end
         worker=false
         armExpiry()
         return true
@@ -1065,7 +1086,7 @@ local function step()
         return false
     end
     cursor=0
-    if switchCursor>0 or dirty or statsPending or timeRequested or timeDirty or markersReady() or healthReady() or promptsReady() then return false end
+    if switchCursor>0 or dirty or statsPending or timeRequested or timeDirty or (timeWatcher and timeWatcher.pending()) or markersReady() or healthReady() or promptsReady() then return false end
     attempts=0
     worker=false
     armExpiry()
@@ -1156,6 +1177,8 @@ applyLiveSettings=function(run)
         peekRequested,peekVisible,peekUntil=false,false,0
     end
     if changed.timeHoldSeconds or changed.opacity_WBP_HudTimer then
+        timeWatcher=timeRevealEnabled and require("QuietDawnTime").new(D) or nil
+        if timeWatcher then timeWatcher.reset() end
         timeRequested,timeVisible,timeUntil=false,false,0;livePanels.WBP_HudTimer=true
     end
     if changed.switchRevealSeconds then
@@ -1211,6 +1234,7 @@ end
 if seen.WBP_HudTimer then
     local timeSubscribed=pcall(NotifyOnNewObject,TIME,function()
         -- Construction only wakes finite readiness/rebinding; it is not time passing.
+        if timeWatcher then timeWatcher.recover() end
         if hudAddress then wake() end
     end)
     if not timeSubscribed then print("[Quiet Dawn - Configurable HUD] Time panel lifecycle notification unavailable.") end
