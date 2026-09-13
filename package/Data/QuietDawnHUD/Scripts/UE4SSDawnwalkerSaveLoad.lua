@@ -1,9 +1,10 @@
 -- MIT. Dawnwalker build 25232147: save requests and player readiness events.
 -- Importing this adapter does nothing. Native APIs are injected by start().
 local M = {}
-function M.start(api, session, file, report, diagnostics)
+function M.start(api, session, file, report, diagnostics, options)
     report = report or function() end
     diagnostics = diagnostics or {}
+    local requireLoadComplete = options and options.requireLoadComplete == true
     local enabled, initialized, requested, completed = false, false, false, false
     local loading, window = false, nil
     local engine, gameplay, previousPawn, previousWorld
@@ -23,6 +24,7 @@ function M.start(api, session, file, report, diagnostics)
         if old and old.handle then api.CancelDelayedAction(old.handle) end
     end
     local function ready(job)
+        if requireLoadComplete and (loading or not completed) then return nil, 'waiting for loading completion' end
         -- Cache absence for this finite window too: at most two global lookups.
         if not valid(engine) and not job.engineLookup then
             job.engineLookup = true; engine = api.FindFirstOf('Engine')
@@ -60,6 +62,9 @@ function M.start(api, session, file, report, diagnostics)
     end
     local function wake(reason)
         if not enabled or not eligible() or window then return end
+        -- Attribute-changing consumers must not treat construction as restored
+        -- gameplay state. Completion wakes readiness; no timer waits for it.
+        if requireLoadComplete and (loading or not completed) then return end
         local job = {attempts=0, source=reason}
         window = job
         local function step()
@@ -139,6 +144,10 @@ function M.start(api, session, file, report, diagnostics)
                 wake('loading complete') -- Idle can be the first notification.
             elseif value and value >= 1 and value <= 4 then
                 loading = true
+                if requireLoadComplete then
+                    completed = false
+                    stop() -- Invalidate even a worker currently inside a native read.
+                end
                 if requested then session.pause() end
             end
         end)

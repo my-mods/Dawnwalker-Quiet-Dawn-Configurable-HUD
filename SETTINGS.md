@@ -1,6 +1,6 @@
 # Settings
 
-[Mod Setting Menu 1.0.5 or later](https://www.nexusmods.com/thebloodofdawnwalker/mods/271) is optional. To use it, open Main Menu > Mod Settings > All Mods, select Quiet Dawn, change settings, press Apply, then load a save. Restore discards unapplied changes; Reset selects this mod's defaults. The mod works and can be fully configured without this menu.
+Required: [Mod Setting Menu 1.0.6 or later](https://www.nexusmods.com/thebloodofdawnwalker/mods/271). Open Mod Settings and press Apply to save and update gameplay.
 
 ## Menu categories
 
@@ -39,15 +39,15 @@ Older settings files receive missing panel size keys at 100%, preserving existin
 
 ## Claw slash marks
 
-**Hide claw slash marks** hides the red Shredded Touch slash effects on enemies, including the sword variant. It defaults to On and changes only these visuals; damage, bleeding and ordinary blood effects keep their game behavior. Turn it Off under **Combat / Enemies**, or set `hideClawSlashMarks = 0` in `settings.ini`, to show the marks again. Apply, then load a save.
+**Hide claw slash marks** hides the red Shredded Touch slash effects on enemies, including the sword variant. It defaults to On and changes only these visuals; damage, bleeding and ordinary blood effects keep their game behavior. Turn it Off under **Combat / Enemies**, or set `hideClawSlashMarks = 0` in `settings.ini`, to show the marks again. Apply to save and update the active game.
 
 Existing settings gain only the missing `hideClawSlashMarks = 1` entry, with a `settings.ini.before-claw-slash-marks` backup. Existing preferences, comments and older backups are preserved.
 
 ## Panel size
 
-All 17 player panels have independent size sliders from 25% to 200% in 5% steps, defaulting to 100%. Edge panels grow inward and centered panels stay centered. Original layout spacing stays fixed, so large sizes can overlap nearby elements. Apply, then load a save. Scaling uses each panel's original proportions, including its text and icons. Size is independent of opacity and contextual visibility; 0% opacity still allows a scaled panel to appear during its normal reveal.
+All 17 player panels have independent size sliders from 25% to 200% in 5% steps, defaulting to 100%. Edge panels grow inward and centered panels stay centered. Original layout spacing stays fixed, so large sizes can overlap nearby elements. Apply to save and update the active game. Scaling uses each panel's original proportions, including its text and icons. Size is independent of opacity and contextual visibility; 0% opacity still allows a scaled panel to appear during its normal reveal.
 
-Only initialization, replacement and settings-load events apply transforms; there is no recurring size update. Returning to 100% or disabling the mod restores the original size and scaling origin.
+Only initialization, replacement and settings Apply events apply transforms; there is no recurring size update. Returning to 100% or disabling the mod restores the original size and scaling origin.
 
 ## Manual configuration
 
@@ -72,7 +72,7 @@ showDirectionalParry = 1
 
 This shows the compass at half opacity and 75% size and the crosshair at full opacity when the game permits, restores running prompts and enemy health bars/names/difficulty icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
 
-Edit `settings.ini`, not `mod_settings.ini` (the optional menu definition), `Scripts/QuietDawnDefaults.lua` (first-use defaults), or the old import-only files. The menu and manual editing use the same settings file, so adding or removing the menu does not require converting your preferences. Keep a backup before a Vortex reinstall.
+Edit `settings.ini`, not `mod_settings.ini` (the settings menu definition), `Scripts/QuietDawnDefaults.lua` (first-use defaults), or the old import-only files. The menu and manual editing use the same settings file. Back it up before editing.
 
 The stable menu ID is `oOCamilleOo_QuietDawnHUD`. The mod generates `settings.ini` beside `mod_settings.ini` in its UE4SS mod folder. This generated file is the authoritative settings store and is not shipped in the ZIP. Existing supported preferences are imported on first use. After the new settings are saved and verified, the successfully imported legacy files are deleted if their contents are unchanged. Migration or save failures retain the originals. Cleanup failures are logged and do not prevent using the new settings. Files left by an earlier migration are not deleted automatically. Back up `settings.ini` before removing/reinstalling the mod or moving its folder. Restore that backup into the same runtime folder before launching. Do not restore an old INI over it.
 
@@ -118,9 +118,9 @@ Missing existing settings, duplicate or invalid settings stop configuration load
 | Controls / HUD peek | Show HUD duration | 0 to 10 seconds in 0.5-second steps |
 | Diagnostics | Logging | Off, On |
 
-Turn off **Hide enemy health bars** to restore ordinary enemy and boss health bars, end caps and boss health-phase indicators. Turn off **Hide enemy names** to restore name labels (boss names), or **Hide enemy difficulty icons** to restore difficulty indicators. All three choices are independent and restore the game's normal visibility for that information. Apply, then load a save. The player HUD peek keeps these choices in effect. At startup, older settings files receive any missing enemy-information options, set to On. Existing preferences and comments are preserved, with a backup before adding missing options.
+Turn off **Hide enemy health bars** to restore ordinary enemy and boss health bars, end caps and boss health-phase indicators. Turn off **Hide enemy names** to restore name labels (boss names), or **Hide enemy difficulty icons** to restore difficulty indicators. All three choices are independent and restore the game's normal visibility for that information. Apply to save and update the active game. The player HUD peek keeps these choices in effect. At startup, older settings files receive any missing enemy-information options, set to On. Existing preferences and comments are preserved, with a backup before adding missing options.
 
-The four Combat cues toggles work independently of the game's Directional Indicator option. Counterattack directions show the attack opening after a perfect parry; unblockable warnings show the skull; directional parry cues show the incoming direction and highlight its arrow during the parry window; the lock option shows a padlock on a hard-locked target between cues. The dot stays hidden and directions hide all center lock icons. All four toggles default to Off. Combat cue size scales the whole cue group from 10% to 200% in 10% steps, defaulting to 100%. Apply, then load a save. Existing counterattack choices are retained when adding the new controls. Logging reports the observed icon, selected arrow or warning, lock state, size and readiness failures in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`.
+The four Combat cues toggles work independently of the game's Directional Indicator option. Counterattack directions show the attack opening after a perfect parry; unblockable warnings show the skull; directional parry cues show the incoming direction and highlight its arrow during the parry window; the lock option shows a padlock on a hard-locked target between cues. The dot stays hidden and directions hide all center lock icons. All four toggles default to Off. Combat cue size scales the whole cue group from 10% to 200% in 10% steps, defaulting to 100%. Apply to save and update the active game. Existing counterattack choices are retained when adding the new controls. Logging reports the observed icon, selected arrow or warning, lock state, size and readiness failures in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`.
 
 Console commands are not used to change settings.
 
@@ -146,9 +146,9 @@ Small blood fluctuations below 0.2% of bar capacity do not renew the health hold
 
 **Time of day:** 0% opacity hides the complete time panel between time changes and HUD peeks. Time changes reveal it at 100% and restart the reveal duration, which defaults to 4 seconds. Pausing preserves the remaining duration. Set the duration to 0 seconds to disable automatic time-change reveals; HUD peek still works. Positive opacity keeps the panel shown and does not use the timer. Existing settings gain these two options without resetting other preferences.
 
-**Hide sprint/haste prompt** is in the **Controls / Action prompts** section. It suppresses only the running prompts, including during manual HUD peek. Other action prompts retain game behavior. Apply, then load a save. Existing settings receive the new option set to On, with their preferences and comments preserved.
+**Hide sprint/haste prompt** is in the **Controls / Action prompts** section. It suppresses only the running prompts, including during manual HUD peek. Other action prompts retain game behavior. Apply to save and update the active game. Existing settings receive the new option set to On, with their preferences and comments preserved.
 
-**Focus activation prompt opacity:** 0% keeps the Toggle abilities button and label hidden in Focus mode and during HUD peek. Positive values use the selected opacity when the game shows the prompt. Ability switching still works. Apply, then load a save.
+**Focus activation prompt opacity:** 0% keeps the Toggle abilities button and label hidden in Focus mode and during HUD peek. Positive values use the selected opacity when the game shows the prompt. Ability switching still works. Apply to save and update the active game.
 
 **Healing and regeneration:** Health and blood gains of at least 0.2% of the bar reveal the stat panel and refresh the health hold duration (4 seconds by default). Repeated qualifying regeneration gains keep the panel visible until that duration expires after the last gain. Smaller gains stay quiet until the bar reaches full. That full-bar reveal rearms only after a deficit of at least 0.2%, preventing repeated near-full notifications. Positive panel opacity and low-resource thresholds keep their existing behavior. The health / blood hold duration also controls these healing reveals; 0 disables them. Small stamina recovery does not trigger a reveal.
 
@@ -216,3 +216,11 @@ All entries below belong under `[Settings]`. Defaults apply to a fresh install w
 A panel opacity of 0 retains automatic behavior; positive opacity keeps that panel at the chosen opacity subject to game visibility rules. Timers accept 0 to 10 seconds in 0.5-second steps; 0 disables that timed reveal without disabling independent low-resource triggers. Opacity and threshold percentages are stored on a 0 to 100 scale. Panel sizes accept 25 to 200 in 5-point steps. Combat cue size accepts 10 to 200 in 10-point steps.
 
 If a value is malformed, duplicated, missing, or outside the supported range, the settings loader reports it in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`. Correct the existing line or restore your backup, then restart and load a save.
+
+## Live Apply
+
+Mod Setting Menu 1.0.6 or later is required. Its callback bridge also requires `HookProcessConsoleExec = 1` in `UE4SS-settings.ini`. Manage that loader setting through your Vortex loader configuration; this archive contains no replacement global UE4SS INI.
+
+Settings are prepared when the game starts and are available from the main menu before the first save. Press **Apply** to save and update the active game. Changes made while loading are retained for the next valid player. Restore and Discard leave saved settings unchanged; Reset takes effect after Apply.
+
+Only affected panels, resource reveals, combat cues, enemy visuals or prompts are queued. Repeated size changes use the original scale and pivot; returning to 100% restores them. Widget caches and native event bindings remain in place for ordinary changes.

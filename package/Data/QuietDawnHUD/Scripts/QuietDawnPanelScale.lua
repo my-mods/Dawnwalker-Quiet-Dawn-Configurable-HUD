@@ -47,8 +47,19 @@ function M.new(scales,diagnostics,session)
     end
     local api={}
     function api.recover() generation=generation+1 end
+    function api.configure(name,factor)
+        scales[name]=factor
+        for _,s in pairs(owners) do
+            if s.name==name and s.scaleBase then
+                s.scaleTarget={s.scaleBase[1]*factor,s.scaleBase[2]*factor}
+                s.phase=factor==1 and 'restoreScale' or 'pivot'
+                s.done,s.failed,s.tries=false,false,0
+                s.generation=generation
+            end
+        end
+    end
     function api.pending(name,entry)
-        if (scales[name] or 1)==1 then return false end
+        if (scales[name] or 1)==1 and (not entry.panelScale or entry.panelScale.done) then return false end
         if entry.scaleBindGeneration==generation and (entry.scaleBindTries or 0)>=8 then return false end
         local s=entry.panelScale
         if not s then return true end
@@ -57,7 +68,7 @@ function M.new(scales,diagnostics,session)
     end
     function api.step(name,object,entry)
         local factor=scales[name] or 1
-        if factor==1 then return true end
+        if factor==1 and (not entry.panelScale or entry.panelScale.done) then return true end
         if entry.scaleBindGeneration~=generation then entry.scaleBindTries=0;entry.scaleBindGeneration=generation end
         if (entry.scaleBindTries or 0)>=8 then return true end
         local s=entry.panelScale
@@ -130,6 +141,8 @@ function M.new(scales,diagnostics,session)
                     s.done=true
                     if diagnostics.debugLogging then diagnostics.event('panelScale','panel=%s size=%.0f%%',name,factor*100) end
                 end
+            elseif s.phase=='restoreScale' then restore(s,'scale');s.phase='restorePivot'
+            elseif s.phase=='restorePivot' then restore(s,'pivot');s.done=true
             elseif s.phase=='rollbackScale' then restore(s,'scale');s.phase='rollbackPivot'
             elseif s.phase=='rollbackPivot' then restore(s,'pivot');s.failed=true;s.generation=generation end
         end)

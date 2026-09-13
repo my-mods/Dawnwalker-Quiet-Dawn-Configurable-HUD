@@ -1,8 +1,11 @@
 -- MIT. Explicit session ownership; importing this module has no side effects.
 local M = {}
-function M.new(api, directory, report)
+function M.new(api, directory, report, options)
     local current, closing, queued, generation = nil, nil, nil, 0
     local notifications, hooks, maps = {}, {}, {}
+    local deferredCleanup
+    local canCleanup = options and options.canCleanup
+    local settings = options and options.settings
     report = report or function() end
     local function guard(scope, fn)
         return function(...)
@@ -22,6 +25,13 @@ function M.new(api, directory, report)
         return slot
     end
     local manager = {watch=watch}
+    function manager.resumeCleanup()
+        if deferredCleanup then
+            local callback = deferredCleanup
+            deferredCleanup = nil
+            api.ExecuteInGameThreadWithDelay(16, callback)
+        end
+    end
     function manager.pause()
         generation = generation + 1
         if current then current.active = false end
@@ -35,6 +45,16 @@ function M.new(api, directory, report)
     local function launch(file, context)
         local scope = {active=true, timers={}, journal={}, order={}, cleanup={}}
         current = scope
+        if settings then
+            if context.settings==nil and options.loadSettings then
+                local ok,values=pcall(options.loadSettings)
+                if ok and type(values)=='table' then
+                    local accepted,err=pcall(settings.seed,values)
+                    if not accepted then report('Settings snapshot rejected: '..tostring(err)) end
+                elseif not ok then report('Settings read failed: '..tostring(values)) end
+            end
+            context.settings=settings.snapshot()
+        end
         local env = setmetatable({Session=scope, SaveLoadContext=context}, {__index=api})
         env._G = env
         local loaded = {}
@@ -59,6 +79,21 @@ function M.new(api, directory, report)
             local result = api.CancelDelayedAction(id)
             scope.timers[id] = nil
             return result
+        end
+        function scope.onSettings(callback)
+            assert(settings, 'Session has no settings adapter')
+            scope.settingsHandler=callback
+        end
+        -- Whole-mod enable/disable only. Ordinary edits use onSettings in place.
+        function scope.restart()
+            if scope.restartPending then return end
+            scope.restartPending=true
+            env.ExecuteInGameThreadWithDelay(16,function()
+                scope.restartPending=false
+                if settings and context.settings and settings.snapshot()
+                    and settings.snapshot().enabled==context.settings.enabled then return end
+                manager.open(file,context)
+            end)
         end
         function env.NotifyOnNewObject(path, callback)
             local slot = watch(path)
@@ -121,6 +156,20 @@ function M.new(api, directory, report)
             return true
         end
         function scope.onClose(callback) scope.cleanup[#scope.cleanup+1] = callback end
+        -- A consumer may release one owned field from its bounded live worker.
+        -- Keep the journal entry so repeated toggles do not grow cleanup state.
+        function scope.restore(key)
+            assert(scope.active, 'Inactive session')
+            local entry=scope.journal[key]
+            if not entry then return false end
+            local value,valid=entry.get()
+            if valid==false or not equal(value,entry.last) or equal(value,entry.original) then return false end
+            entry.set(entry.original)
+            local restored,stillValid=entry.get()
+            assert(stillValid==false or equal(restored,entry.original), 'Live restore readback failed: '..key)
+            entry.last=entry.original
+            return true
+        end
         -- UObject methods can disappear while a retained wrapper still says valid.
         -- Keep an owned identity snapshot and check it before dispatching a method.
         -- Use for transient object values; scalar/global journals retain strict cleanup.
@@ -178,11 +227,13 @@ function M.new(api, directory, report)
         local failed, failedCleanup, firstError = {}, {}, nil
         local skippedObjects = 0
         local function step()
+            if canCleanup and not canCleanup() then deferredCleanup = step; return end
             -- Small scalar restores can share a frame. A setter that rebuilds
             -- native state returns true to yield; custom cleanup always yields.
             local started = api.os.clock()
             local budget = 0
             for unit = 1,16 do
+            if canCleanup and not canCleanup() then deferredCleanup = step; return end
             if unit > 1 and api.os.clock()-started >= 0.0005 then break end
             local cost = index > 0 and (scope.order[index].objectValue and 8 or 1) or 1
             if budget + cost > 16 then break end
@@ -233,6 +284,13 @@ function M.new(api, directory, report)
         generation = generation + 1
         local ticket = generation
         manager.close(function() if ticket == generation then launch(file, context) end end)
+    end
+    if settings then
+        settings.attach(function(values,changes)
+            if current and current.active and current.settingsHandler then
+                current.settingsHandler(values,changes)
+            end
+        end)
     end
     return manager
 end

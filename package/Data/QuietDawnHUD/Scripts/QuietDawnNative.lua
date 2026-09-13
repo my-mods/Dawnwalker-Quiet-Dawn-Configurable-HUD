@@ -80,6 +80,12 @@ function M.attach(api, report)
         logging=debugLogging==true;active=true
         if logging then report('Native HUD bridge active (Framecore 2b; deletion tracking).') end
     end
+    function bridge.setLogging(enabled)
+        enabled=enabled==true
+        if logging==enabled then return end
+        api._QDNSetLogging(enabled)
+        logging=enabled
+    end
     function bridge.prepare(path)
         if path:sub(1,6)=='/Game/' then return api._QDNBind(path) end
     end

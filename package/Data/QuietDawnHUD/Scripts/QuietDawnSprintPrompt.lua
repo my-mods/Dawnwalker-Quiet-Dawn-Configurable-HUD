@@ -17,6 +17,8 @@ function M.new(api)
         return id.OutTableId:ToString()==tableId and (name=="Input_Sprint" or name=="Input_Haste")
     end
     local self={}
+    local enabled=true
+    function self.setEnabled(value) enabled=value==true end
     function self.queue(hud)
         if not same(owner,hud) then entries={};owner=hud;cursor=3 end
         if cursor<=2 then again=true else cursor,attempts,again=1,0,false end
@@ -27,7 +29,7 @@ function M.new(api)
         if not self.pending(hud) then return end
         -- One lookup OR one named prompt per existing worker frame. Missing
         -- readiness gets eight attempts, then sleeps until another HUD event.
-        if not valid(library) then
+        if enabled and not valid(library) then
             attempts=attempts+1
             library=api.StaticFindObject("/Script/Engine.Default__KismetTextLibrary")
             if attempts>=8 and not valid(library) then
@@ -50,7 +52,8 @@ function M.new(api)
             entry={object=object,original=object:GetRenderOpacity(),hidden=false}
             entries[field]=entry
         end
-        local ok,hide=pcall(classify,object)
+        local ok,hide=true,false
+        if enabled then ok,hide=pcall(classify,object) end
         if not ok then
             hide=false
             if api.D.debugLogging and not entry.warned then

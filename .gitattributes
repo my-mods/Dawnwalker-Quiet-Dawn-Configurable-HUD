@@ -1,11 +1,13 @@
+*.lua text eol=lf
 
 # Bundled dependency bytes must match the immutable library revision.
 **/SettingsStore.lua -text whitespace=cr-at-eol
 **/UE4SSCommon*.lua -text whitespace=cr-at-eol
-**/UE4SSDawnwalkerSaveLoad.lua -text whitespace=cr-at-eol
+**/UE4SSDawnwalker*.lua -text whitespace=cr-at-eol
 LICENSES/*-ue4ss-common.txt -text
 # Preserve the upstream profile bytes used by the compatibility fingerprint.
 Compatibility/Framecore/UE4SS-settings.ini -text -whitespace
 # Keep the native build inputs reproducible across Windows checkouts.
 native/* text eol=lf
 **/dlls/*.dll binary
+**/dmm_api.lua -text

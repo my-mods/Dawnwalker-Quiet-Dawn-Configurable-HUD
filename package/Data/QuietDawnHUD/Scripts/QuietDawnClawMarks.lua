@@ -10,6 +10,7 @@ function M.new(D, session, wake)
         {name='GC_ShredBleedingInflicted_Sword', effect='NS_Shred_Sword'},
     }
     local cursor=1
+    local enabled=true
     local function valid(o) return o~=nil and o:IsValid() end
     local function matches(o, name)
         return valid(o) and o:GetFullName()==name
@@ -29,6 +30,13 @@ function M.new(D, session, wake)
         local classAddress=class:GetAddress()
         local effect=object.OneShotEffect
         if not matches(effect,'NiagaraSystem '..entry.effectPath) then return false end
+        if entry.record and entry.record.object==object and entry.record.same() then
+            entry.record.owned=true
+            object.OneShotEffect=nil
+            assert(not valid(object.OneShotEffect),'Claw marks write readback failed')
+            entry.applied=object
+            return true
+        end
         local function sameOwner()
             return matches(object,entry.fullName) and matches(object:GetClass(),
                 'BlueprintGeneratedClass '..entry.classPath)
@@ -36,9 +44,10 @@ function M.new(D, session, wake)
         end
         -- Install cleanup before the write so even a failed readback can restore.
         -- Never resurrect a deleted/replaced cue or overwrite another mod's VFX.
-        local owned=false
-        session.onClose(function()
-            if not owned or not sameOwner() or valid(object.OneShotEffect) then return end
+        local record={object=object,same=sameOwner,owned=false}
+        entry.record=record
+        record.restore=function()
+            if not record.owned or not sameOwner() or valid(object.OneShotEffect) then return end
             if not matches(effect,'NiagaraSystem '..entry.effectPath) then
                 -- Lua UObject wrappers do not root assets. Reacquire the exact
                 -- original only during cleanup if garbage collection removed it.
@@ -47,13 +56,15 @@ function M.new(D, session, wake)
             assert(matches(effect,'NiagaraSystem '..entry.effectPath),'Claw marks original effect unavailable')
             object.OneShotEffect=effect
             assert(matches(object.OneShotEffect,'NiagaraSystem '..entry.effectPath),'Claw marks restore failed')
+            record.owned=false;entry.applied=nil
             if D.debugLogging then D.count('clawMarkRestores') end
-        end)
-        owned=true -- cleanup also covers a setter/readback that fails after mutation
+        end
+        session.onClose(record.restore)
+        record.owned=true -- cleanup also covers a setter/readback that fails after mutation
         local written,writeError=pcall(function()object.OneShotEffect=nil end)
-        owned=not valid(object.OneShotEffect)
+        record.owned=not valid(object.OneShotEffect)
         assert(written,writeError)
-        assert(owned,'Claw marks write readback failed')
+        assert(record.owned,'Claw marks write readback failed')
         entry.applied=object
         if D.debugLogging then
             D.count('clawMarkWrites')
@@ -71,6 +82,7 @@ function M.new(D, session, wake)
             -- Construction may run on another thread. Only queue a wrapper;
             -- all identity/property operations use the shared game-thread worker.
             entry.candidate=object
+            if not enabled then return end
             if not entry.pending then entry.attempts=0 end
             entry.pending=true
             wake()
@@ -78,15 +90,28 @@ function M.new(D, session, wake)
         if not ok then report(entry,'construction notification unavailable') end
     end
     local self={}
+    function self.configure(value)
+        enabled=value==true
+        for _,entry in ipairs(entries) do
+            entry.pending=false;entry.lookup=false;entry.attempts=0;entry.warned=nil
+            if enabled then
+                entry.candidate=entry.candidate or (entry.record and entry.record.object)
+                entry.pending=entry.candidate~=nil;entry.lookup=not entry.pending
+            else entry.restorePending=entry.record and entry.record.owned or false end
+        end
+    end
     function self.pending()
-        for _,entry in ipairs(entries) do if entry.lookup or entry.pending then return true end end
+        for _,entry in ipairs(entries) do if entry.restorePending or entry.lookup or entry.pending then return true end end
         return false
     end
     function self.step()
         for _=1,#entries do
             local entry=entries[cursor]
             cursor=cursor%#entries+1
-            if entry.lookup then
+            if entry.restorePending then
+                entry.record.restore();entry.restorePending=false
+                return
+            elseif entry.lookup then
                 entry.lookup=false
                 local object=StaticFindObject(entry.path)
                 if valid(object) then entry.candidate=object;entry.pending=true;entry.attempts=0 end

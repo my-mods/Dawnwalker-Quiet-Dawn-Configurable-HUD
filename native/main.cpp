@@ -301,6 +301,16 @@ public:
             s->active=true;
             return 0;
         });
+        lua.register_function("_QDNSetLogging",[](const Lua& l) {
+            gameThread();const bool debug=l.get_bool();auto s=current;
+            std::lock_guard lock(s->mutex);
+            if(s->debug!=debug) {
+                s->debug=debug;s->queue.track=debug;
+                s->matched=s->delivered=s->stale=s->failures=s->nanos=0;
+                s->queue.merged=s->queue.overflow=0;
+            }
+            return 0;
+        });
         lua.register_function("_QDNBind",[](const Lua& l) {
             auto s=current;
             gameThread(); const auto path=l.get_string();

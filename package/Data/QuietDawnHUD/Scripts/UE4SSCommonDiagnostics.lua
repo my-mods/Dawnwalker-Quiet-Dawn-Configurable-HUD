@@ -8,6 +8,30 @@ local function format(message, ...)
 end
 function M.new(options)
     local o = options or {}
+    if o.mutable then
+        local configuration={}
+        for key,value in pairs(o) do if key~='mutable' then configuration[key]=value end end
+        local proxy,wrapped={},{}
+        function proxy.setEnabled(enabled)
+            enabled=enabled==true
+            if proxy.debugLogging==enabled then return end
+            configuration.debugLogging=enabled
+            local implementation=M.new(configuration)
+            proxy.debugLogging=enabled
+            for _,name in ipairs({'log','error','debug','event','count','sample','flush','now','snapshot'}) do
+                proxy[name]=implementation[name]
+            end
+            for _,record in ipairs(wrapped) do record.call=implementation.wrap(record.name,record.fn) end
+            proxy._implementation=implementation
+        end
+        function proxy.wrap(name,fn)
+            local record={name=name,fn=fn,call=proxy._implementation.wrap(name,fn)}
+            wrapped[#wrapped+1]=record
+            return function(...) return record.call(...) end
+        end
+        proxy.setEnabled(o.debugLogging==true)
+        return proxy
+    end
     local D = {debugLogging = o.debugLogging == true}
     local output, prefix = o.output or print, o.prefix or ''
     function D.log(message, ...) output(prefix .. format(message, ...)) end

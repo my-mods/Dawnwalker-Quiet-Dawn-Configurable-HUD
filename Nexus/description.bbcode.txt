@@ -20,12 +20,12 @@ Keep the world in view, with health and stamina returning when needed. Choose au
 
 [list]
 [*][b][color=#A8D5C2]17 panel opacity controls:[/color][/b] Adjust each managed player panel from 0% to 100% in 5% steps. Zero uses automatic hiding and contextual reveals; a positive value sets its opacity while the game retains contextual visibility rules. Compass opacity alone controls the compass.
-[*][b][color=#A8D5C2]17 panel size controls:[/color][/b] All 17 player panels have independent size sliders from 25% to 200% in 5% steps, defaulting to 100%. Edge panels grow inward and centered panels stay centered. Original layout spacing stays fixed, so large sizes can overlap nearby elements. Apply, then load a save.
+[*][b][color=#A8D5C2]17 panel size controls:[/color][/b] All 17 player panels have independent size sliders from 25% to 200% in 5% steps, defaulting to 100%. Edge panels grow inward and centered panels stay centered. Original layout spacing stays fixed, so large sizes can overlap nearby elements. Apply to save and update the active game.
 [*][b][color=#A8D5C2]Health and stamina alerts:[/color][/b] At their default 0% opacity, both stat panels appear after damage, meaningful healing or stamina use. They remain visible while health/blood is strictly below 50% or stamina is strictly below 20%. Human health follows HP; vampire health follows the blood bar.
 [*][b][color=#A8D5C2]Adjustable hide delays:[/color][/b] Health alerts last 4 seconds and stamina alerts 1.5 seconds by default. Damage, stamina use and health/blood gains of at least 0.2% of the bar refresh their corresponding timers. Repeated qualifying regeneration gains keep health visible until its timer expires after the last gain. Smaller gains stay quiet; reaching full after a deficit of at least 0.2% briefly reveals health.
 [*][b][color=#A8D5C2]Manual HUD peek:[/color][/b] Hold Controls Legend (Menu on Xbox, Options on PlayStation, or L on keyboard by default) for a 3-second HUD peek. Repeat to refresh it. Automatic resource alerts resume afterward; enemy information and special prompt rules keep their settings.
 [*][b][color=#A8D5C2]Contextual panels:[/color][/b] Item and ability quickslots appear for 3 seconds after switching. The time panel appears for 4 seconds after time advances. At automatic opacity, the special-attack panel appears only during its cooldown. Timed reveals range from 0 to 10 seconds in 0.5-second steps; zero disables that timed reveal.
-[*][b][color=#A8D5C2]Claw slash marks:[/color][/b] Hide the red Shredded Touch slash effects, including the sword variant, with Hide claw slash marks under Enemies. On by default. Turn Off to show them again. Damage, bleeding and ordinary blood effects keep their game behavior. Apply, then load a save. Manual key: hideClawSlashMarks = 1 (hide) or 0 (show).
+[*][b][color=#A8D5C2]Claw slash marks:[/color][/b] Hide the red Shredded Touch slash effects, including the sword variant, with Hide claw slash marks under Enemies. On by default. Turn Off to show them again. Damage, bleeding and ordinary blood effects keep their game behavior. Apply to save and update the active game. Manual key: hideClawSlashMarks = 1 (hide) or 0 (show).
 [*][b][color=#A8D5C2]Enemy information:[/color][/b] Enemy health bars, names and difficulty icons are hidden by default, with three independent toggles to restore them. Turn off Hide enemy health bars to restore ordinary enemy and boss health bars, end caps and boss health-phase indicators; turn off Hide enemy names to restore name labels (boss names). Enemy stamina and wounds retain game behavior.
 [*][b][color=#A8D5C2]Four combat cue toggles:[/color][/b] Independently enable counterattack directions, unblockable warnings, directional parry cues and the lock icon. All default to Off. Parry cues show the incoming direction and highlight its parry window; counterattack cues show weak-spot directions during openings. Cue size ranges from 10% to 200%, default 100%. The center dot stays hidden, and directions suppress center lock icons.
 [*][b][color=#A8D5C2]Quieter prompts:[/color][/b] Hide Sprint/Haste prompts, the quickslot switch hint and the Focus Toggle abilities hint. Restore running prompts with Hide sprint/haste prompt, or restore the Focus hint with positive Focus activation prompt opacity. Ability switching, interaction prompts, dialogue, subtitles, notifications and menus retain game behavior.
@@ -35,7 +35,7 @@ Keep the world in view, with health and stamina returning when needed. Choose au
 
 [list]
 [*][b][color=#A8D5C2]Required:[/color][/b] [url=https://www.nexusmods.com/thebloodofdawnwalker/mods/283]UE4SS for BoD — Framecore 2b[/url]. The native HUD bridge is included. An alternative Dawnwalker UE4SS build must support the delayed game-thread APIs described in the [url=https://github.com/my-mods/Dawnwalker-Quiet-Dawn-Configurable-HUD#requirements]README requirements[/url] and have Blueprint script hooks enabled.
-[*][b][color=#A8D5C2]Optional:[/color][/b] [url=https://www.nexusmods.com/thebloodofdawnwalker/mods/271]Mod Setting Menu 1.0.5 or later[/url] provides the in-game settings interface. Quiet Dawn also works with its defaults and manual settings.ini editing.
+[*][b][color=#A8D5C2]Required:[/color][/b] [url=https://www.nexusmods.com/thebloodofdawnwalker/mods/271]Mod Setting Menu 1.0.6 or later[/url].
 [/list]
 
 [size=4][b][color=#E8C88A]Installation[/color][/b][/size]
@@ -47,7 +47,7 @@ Keep the world in view, with health and stamina returning when needed. Choose au
 
 [size=4][b][color=#E8C88A]Configuration[/color][/b][/size]
 
-With the optional menu, open Main Menu > Mod Settings > All Mods, select Quiet Dawn, adjust settings and press Apply, then load a save. Restore discards unapplied changes; Reset selects the defaults.
+With the settings menu, open Main Menu > Mod Settings > All Mods, select Quiet Dawn, adjust settings and press Apply to save and update the active game. Restore discards unapplied changes; Reset selects the defaults.
 
 The menu runs from General through Player status, Combat, Exploration and Controls, ending with Diagnostics. Categories are alphabetical within each group, using headings such as Combat / Crosshair and Exploration / Compass. Each panel keeps its size directly after opacity, followed by related thresholds or reveal durations. Combat / Indicators contains counterattack directions, parry cues, unblockable warnings, the lock icon and cue size. Logging remains the final entry.
 
@@ -55,7 +55,7 @@ Without the menu, launch the game once to generate the settings file. Close the 
 
 [code]Dawnwalker/Binaries/Win64/ue4ss/Mods/QuietDawnHUD/settings.ini[/code]
 
-Use 1 for On, 0 for Off, whole percentages such as 50, and decimal seconds such as 1.5. Save, restart the game and load a save. Edit the generated settings.ini; mod_settings.ini defines the optional menu.
+Use 1 for On, 0 for Off, whole percentages such as 50, and decimal seconds such as 1.5. Save, restart the game and load a save. Edit the generated settings.ini; mod_settings.ini defines the settings menu.
 
 For example, change these existing lines to show the compass at half opacity, restore enemy health bars and names, and enable directional parry cues:
 
@@ -66,8 +66,13 @@ showDirectionalParry = 1[/code]
 
 Fresh settings enable the mod with all 17 panel opacities at 0% and panel sizes at 100%, enemy health bars/names/difficulty icons and running prompts hidden, all four combat cues Off, and Logging Off. Existing saved or supported imported preferences take precedence. All defaults, panel keys and ranges are listed in the included SETTINGS.md and the [url=https://github.com/my-mods/Dawnwalker-Quiet-Dawn-Configurable-HUD/blob/main/SETTINGS.md]settings reference[/url].
 
-[b][color=#A8D5C2]Logging:[/color][/b] The final menu option, or debugLogging = 1 in settings.ini, enables HUD diagnostics in Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log. Apply and load a save; restart to diagnose startup activation. Logging is Off by default.
+[b][color=#A8D5C2]Logging:[/color][/b] The final menu option, or debugLogging = 1 in settings.ini, enables HUD diagnostics in Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log. Apply to update diagnostics immediately; restart to diagnose startup activation. Logging is Off by default.
 
 [size=4][b][color=#E8C88A]Credits and source[/color][/b][/size]
 
 [url=https://github.com/my-mods/Dawnwalker-Quiet-Dawn-Configurable-HUD]Source code and documentation[/url] — MIT licensed. Standalone code informed by the author's HUD Tweaks - Fixes work and the game's HUD structure. UE4SS and Framecore contributors provide the separate runtime and hook APIs; mmarcussa provides Mod Setting Menu. The bundled [url=https://github.com/my-mods/ue4ss-common]ue4ss-common helpers[/url] are MIT licensed and need no separate installation. Third-party notices are included in LICENSES. No game assets or UE4SS runtime DLL are bundled.
+
+
+[b]Live settings[/b]
+Mod Setting Menu 1.0.6+ is required. Settings are prepared at startup; Apply saves changes and updates gameplay. The loader must use HookProcessConsoleExec = 1, managed through your Vortex loader configuration.
+Only affected panels, resource reveals, combat cues, enemy visuals or prompts are queued. Repeated size changes use the original scale and pivot; returning to 100% restores them. Widget caches and native event bindings remain in place for ordinary changes.

@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/my-mods/ue4ss-common",
-  "commit": "e373d3702d2ef18acb484ec484fe41332248520b",
+  "commit": "b51434dee720bc000090d4cf387d60f8f6be7e60",
   "modules": [
     {
       "source": "src/SettingsStore.lua",
@@ -11,7 +11,7 @@
     },
     {
       "source": "src/UE4SSCommonDiagnostics.lua",
-      "sha256": "c82aaf42a83c99c4b0f84954f3c04732a9b26bddcb9b20b3ee8892c87b345172",
+      "sha256": "a6c3de0fb908085654e967a0c38c388dd021d19af7fecc0bb0722a3ea1b20f0e",
       "destinations": [
         "package/Data/QuietDawnHUD/Scripts/UE4SSCommonDiagnostics.lua"
       ]
@@ -25,14 +25,14 @@
     },
     {
       "source": "src/UE4SSCommonSession.lua",
-      "sha256": "60ffc2ca565c31c98a763b084fe1de4417c9f2b922ec22a136fb4ad42e8d9a62",
+      "sha256": "924272d0246d73759ba57a6ed5f0feea319065a96119d7c9ff7248dd345a09a2",
       "destinations": [
         "package/Data/QuietDawnHUD/Scripts/UE4SSCommonSession.lua"
       ]
     },
     {
       "source": "src/games/UE4SSDawnwalkerSaveLoad.lua",
-      "sha256": "71c112e47d0abe2646d8b03bf08e43b47a871ba5ebd5339f670fc5c95e82f2a1",
+      "sha256": "17e9cbb70326f536b14ba5512a46ac425e7e1446c90516e826b2092b30465707",
       "destinations": [
         "package/Data/QuietDawnHUD/Scripts/UE4SSDawnwalkerSaveLoad.lua"
       ]
@@ -42,6 +42,13 @@
       "sha256": "7e477c5ea119ad650564c803ab28bcab6802c063bb7c2e27b6c20336156d7b59",
       "destinations": [
         "package/Data/QuietDawnHUD/Scripts/UE4SSCommonSettingsUpgrade.lua"
+      ]
+    },
+    {
+      "source": "src/games/UE4SSDawnwalkerSettings.lua",
+      "sha256": "039b09679eafec2b19cd8f27e3033dec26a52484a7529edbf14f15193ba07ef1",
+      "destinations": [
+        "package/Data/QuietDawnHUD/Scripts/UE4SSDawnwalkerSettings.lua"
       ]
     }
   ]

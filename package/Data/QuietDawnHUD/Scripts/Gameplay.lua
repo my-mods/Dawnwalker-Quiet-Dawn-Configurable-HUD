@@ -53,6 +53,18 @@ for _, key in ipairs({"healthHoldSeconds", "staminaHoldSeconds", "manualPeekSeco
         return
     end
 end
+local livePending,applyLiveSettings
+local livePanels={}
+Session.onSettings(function(values)
+    if (values.enabled==1)~=config.enabled then Session.restart();return end
+    D.setEnabled(values.debugLogging==1)
+    if SaveLoadDiagnostics then SaveLoadDiagnostics.debugLogging=values.debugLogging==1 end
+    if applyLiveSettings then
+        livePending=values
+        -- The persistent subscription only queues owned data.
+        applyLiveSettings(false)
+    end
+end)
 if not config.enabled then return end
 local applyCombatCue=require("QuietDawnCombatCues").new(config,D,Session)
 if QuietDawnNative then QuietDawnNative.begin(config.debugLogging) end
@@ -190,6 +202,7 @@ end
 -- This widget has no Tick event; no button-state sampling or remapping is used.
 local LEGEND="/Game/_Dawnwalker/UI/_Unified/HUD/ControlsLegend/WBP_ControlsLegend.WBP_ControlsLegend_C"
 local function peekInput(context,entryParam)
+    if not manualPeekEnabled then return end
     if tonumber(unwrap(entryParam))~=850 then return end
     local object=unwrap(context)
     -- The accepted HUD owns this cached widget. The worker revalidates the
@@ -205,6 +218,7 @@ end
 -- must not reveal the panel. No borrowed DayTime structs cross callbacks.
 local TIME="/Game/_Dawnwalker/UI/_Unified/HUD/Timer/WBP_HudTimer.WBP_HudTimer_C"
 local function timeChanged(context,entryParam)
+    if not timeRevealEnabled then return end
     if tonumber(unwrap(entryParam))~=455 then return end
     local object=unwrap(context)
     if not valid(hud) or not valid(controller) or not valid(object) or not valid(frameClock)
@@ -409,14 +423,29 @@ local healthQueue, healthPending, healthFirst, healthLast = {}, {}, 1, 0
 local function healthReady()
     return healthFirst<=healthLast and candidate==nil and valid(hud)
 end
-local function queueHealth(object, spec)
-    if object==nil or #spec.fields==0 then return end
-    if healthPending[object] then healthPending[object].again=true;return end
+local function queueHealth(object, spec, requestedFields)
+    if object==nil then return end
+    spec.recent,spec.recentSet=spec.recent or {},spec.recentSet or {}
+    if not spec.recentSet[object] then
+        if #spec.recent>=64 then spec.recentSet[table.remove(spec.recent,1)]=nil end
+        spec.recent[#spec.recent+1]=object;spec.recentSet[object]=true
+    end
+    local fields=requestedFields or spec.fields
+    if #fields==0 then return end
+    if healthPending[object] then
+        local job=healthPending[object];job.again=true
+        local merged,seenFields={},{}
+        for _,list in ipairs({job.fields,job.nextFields or {},fields}) do
+            for _,field in ipairs(list) do if not seenFields[field] then merged[#merged+1]=field;seenFields[field]=true end end
+        end
+        job.nextFields=merged
+        return
+    end
     if healthLast-healthFirst+1>=64 then
         if D.debugLogging then D.count("enemyHealthQueueFull") end
         return
     end
-    local job={object=object,spec=spec,field=1,attempts=0}
+    local job={object=object,spec=spec,fields=fields,field=1,attempts=0}
     healthLast=healthLast+1;healthQueue[healthLast]=job;healthPending[object]=job
     wake("enemyHealth")
 end
@@ -428,7 +457,7 @@ local function healthStep()
     local function retry()
         job.attempts=job.attempts+1
         if job.attempts>=120 then
-            if D.debugLogging then D.event("enemyHealth","readiness exhausted: %s field=%s",spec.path,spec.fields[job.field]) end
+            if D.debugLogging then D.event("enemyHealth","readiness exhausted: %s field=%s",spec.path,job.fields[job.field]) end
             return false
         end
         return true
@@ -436,8 +465,8 @@ local function healthStep()
     local function nextField()
         job.field=job.field+1
         job.attempts=0
-        if job.field<=#spec.fields then return true end
-        if job.again then job.field=1;job.again=false;return true end
+        if job.field<=#job.fields then return true end
+        if job.again then job.field=1;job.fields=job.nextFields or spec.fields;job.nextFields=nil;job.again=false;return #job.fields>0 end
         return false
     end
     local keep=false
@@ -468,17 +497,21 @@ local function healthStep()
         if not valid(ow) or not valid(pc) then keep=retry();return end
         if not sameObject(ow,world) or not sameObject(pc,controller)
             or not sameObject(controller:GetWorld(),world) then return end
-        local child=object[spec.fields[job.field]]
+        local field=job.fields[job.field]
+        local child=object[field]
         if not valid(child) then
             -- A missing bar/label must not block independent children. Each
             -- field gets finite readiness, and later target events retry it.
             keep=retry() or nextField()
             return
         end
-        if child:GetRenderOpacity()~=0 then
-            opacity(child, 0)
-            if D.debugLogging then D.count("enemyHealthWrites");D.event("enemyHealth","hidden=%s",spec.fields[job.field]) end
-        end
+        local setting=field=='BossNameLabel' and 'hideEnemyNames' or (field=='LevelIndicator' and 'hideEnemyDifficultyIcons' or 'hideEnemyHealthBars')
+        if config[setting] then
+            if child:GetRenderOpacity()~=0 then
+                opacity(child,0)
+                if D.debugLogging then D.count('enemyHealthWrites') end
+            end
+        else Session.restore('opacity:'..tostring(child:GetAddress())) end
         keep=nextField()
     end)
     if not success then
@@ -499,7 +532,7 @@ local function promptsReady()
 end
 local function promptEvent(context)
     local object=unwrap(context)
-    if sprintPrompts and sameObject(object,hud) then
+    if config.hideSprintPrompt and sprintPrompts and sameObject(object,hud) then
         sprintPrompts.queue(object)
         wake("sprintPrompt")
     end
@@ -517,6 +550,7 @@ local function currentPanelEvent(context,field)
         and sameObject(object:GetOwningPlayer(),controller) and sameObject(object:GetWorld(),world)
 end
 local function cooldownEvent(context)
+    if (panelOpacities.WBP_HUD_SpecialAttackCooldown or 0)~=0 then return end
     if not currentPanelEvent(context,"WBP_HUD_SpecialAttackCooldown") then return end
     -- Setup/finish update the stock Remaining Time before post delivery.
     -- The existing panel slice reads it, including during initial acquisition.
@@ -555,6 +589,11 @@ local specs = {
     {path="/Script/RebelSettings.RebelGameUserSettings:SetSetting", callback=refreshSettings, native=true},
     {path="/Script/RebelSettings.RebelGameUserSettings:SetSettingAsBool", callback=refreshSettings, native=true},
 }
+local function noop() end
+local knownSpecs={}
+for _,spec in ipairs(specs) do knownSpecs[spec.path]=true end
+local function ensureFeatureSpecs()
+    local first=#specs+1
 if #statNames>0 then
     for _,entry in ipairs({
         {"WBP_HUD_HumanStats", "On HP changed", "health", "HumanStats"},
@@ -581,7 +620,6 @@ end
 if timeRevealEnabled then
     specs[#specs+1]={path=TIME..":ExecuteUbergraph_WBP_HudTimer", callback=timeChanged, optional="time"}
 end
-local function noop() end
 if seen.WBP_HUD_SpecialAttackCooldown and (panelOpacities.WBP_HUD_SpecialAttackCooldown or 0)==0 then
     specs[#specs+1]={path=SPECIAL..":SetupCooldownEffect", callback=cooldownEvent, optional="panel"}
     specs[#specs+1]={path=SPECIAL..":OnCooldownFinished", callback=cooldownEvent, optional="panel"}
@@ -589,6 +627,15 @@ end
 if config.switchRevealSeconds>0 and (seen.WBP_HUD_Quickslots or seen.WBP_AA_Quickslots) then
     specs[#specs+1]={path=ROOT..":ExecuteUbergraph_WBP_GameHUD", callback=switchedQuickslots, optional="panel"}
 end
+    local last=#specs
+    local index=first
+    for i=first,last do
+        local spec=specs[i]
+        if not knownSpecs[spec.path] then knownSpecs[spec.path]=true;specs[index]=spec;index=index+1 end
+    end
+    for i=index,last do specs[i]=nil end
+end
+ensureFeatureSpecs()
 local function registerOne()
     if hookIndex > #specs then return true end
     local spec = specs[hookIndex]
@@ -867,6 +914,7 @@ local function panelStep(name)
 end
 local timeTurn=false
 local function step()
+    if livePending then applyLiveSettings(true);return false end
     -- At most one hook registration OR one state snapshot OR one direct panel
     -- read/write per callback. 16 ms delay yields to a later game frame.
     if clawMarks and clawMarks.pending() then
@@ -947,6 +995,11 @@ local function step()
         local target=stateReady and value or 1
         if target~=desired or wasReady~=stateReady then desired=target;dirty=true end
         armExpiry()
+        return false
+    end
+    local changedPanel=next(livePanels)
+    if changedPanel and candidate==nil then
+        if panelStep(changedPanel) then livePanels[changedPanel]=nil end
         return false
     end
     markerTurn=not markerTurn
@@ -1039,7 +1092,7 @@ wake = function(statsOnly)
         absent={}
         settingsPending,settingsAttempts=true,0
     end
-    if statsOnly~="marker" and statsOnly~="settings" and statsOnly~="resource" and statsOnly~="enemyHealth" and statsOnly~="time" and statsOnly~="sprintPrompt" and statsOnly~="clawMarks" then dirty=true end
+    if statsOnly~="marker" and statsOnly~="settings" and statsOnly~="resource" and statsOnly~="enemyHealth" and statsOnly~="time" and statsOnly~="sprintPrompt" and statsOnly~="clawMarks" and statsOnly~="liveSettings" then dirty=true end
     if worker then if D.debugLogging then D.count("workerCoalesced") end; return end
     worker=true
     if D.debugLogging then D.count("workerStarts") end
@@ -1068,6 +1121,82 @@ wake = function(statsOnly)
         return stop
     end)
 end
+applyLiveSettings=function(run)
+    if not run then wake('liveSettings');return end
+    local values=livePending;livePending=nil
+    local updated=require('SettingsModel').convert(values)
+    local changed={}
+    for key,value in pairs(updated) do
+        if type(value)~='table' and config[key]~=value then changed[key]=true end
+    end
+    for _,name in ipairs(names) do
+        if panelOpacities[name]~=updated.panelOpacities[name] then livePanels[name]=true;absent[name]=nil end
+        if panelScales[name]~=updated.panelScales[name] then
+            if not panelScaling then panelScaling=require('QuietDawnPanelScale').new(panelScales,D,Session) end
+            panelScaling.configure(name,updated.panelScales[name]);livePanels[name]=true;absent[name]=nil
+        end
+        panelOpacities[name]=updated.panelOpacities[name]
+        panelScales[name]=updated.panelScales[name]
+    end
+    for key,value in pairs(updated) do if type(value)~='table' then config[key]=value end end
+    dynamicPanels.HumanStats,dynamicPanels.VampireStats=updated.dynamicPanels.HumanStats,updated.dynamicPanels.VampireStats
+    statNames={}
+    for _,name in ipairs({'HumanStats','VampireStats'}) do if dynamicPanels[name] then statNames[#statNames+1]=name end end
+    manualPeekEnabled=config.manualPeek and config.manualPeekSeconds>0 and #names>0
+    timeRevealEnabled=seen.WBP_HudTimer and (panelOpacities.WBP_HudTimer or 0)==0 and config.timeHoldSeconds>0
+    if changed.debugLogging and QuietDawnNative then QuietDawnNative.setLogging(config.debugLogging) end
+    if changed.healthThreshold or changed.staminaThreshold or changed.healthHoldSeconds or changed.staminaHoldSeconds
+        or changed.opacity_HumanStats or changed.opacity_VampireStats then
+        healthUntil,staminaUntil=0,0
+        statsPending,statsRefresh=true,true
+        livePanels.HumanStats,livePanels.VampireStats=true,true
+    end
+    if changed.manualPeek or changed.manualPeekSeconds then
+        if peekVisible then for _,name in ipairs(names) do livePanels[name]=true end end
+        peekRequested,peekVisible,peekUntil=false,false,0
+    end
+    if changed.timeHoldSeconds or changed.opacity_WBP_HudTimer then
+        timeRequested,timeVisible,timeUntil=false,false,0;livePanels.WBP_HudTimer=true
+    end
+    if changed.switchRevealSeconds then
+        switchRequested,switchVisible,switchUntil=false,false,0
+        livePanels.WBP_HUD_Quickslots,livePanels.WBP_AA_Quickslots=true,true
+    end
+    if changed.hideSprintPrompt then
+        if not sprintPrompts and config.hideSprintPrompt then
+            sprintPrompts=require('QuietDawnSprintPrompt').new({StaticFindObject=StaticFindObject,opacity=opacity,D=D})
+        end
+        if sprintPrompts then sprintPrompts.setEnabled(config.hideSprintPrompt);sprintPrompts.queue(hud) end
+    end
+    if changed.hideClawSlashMarks then
+        if not clawMarks and config.hideClawSlashMarks then
+            clawMarks=require('QuietDawnClawMarks').new(D,Session,function()wake('clawMarks')end)
+        end
+        if clawMarks then clawMarks.configure(config.hideClawSlashMarks) end
+    end
+    if changed.hideEnemyHealthBars or changed.hideEnemyNames or changed.hideEnemyDifficultyIcons then
+        local fields={{'SegmentedHealthBar','HealthBarLeftCap','HealthBarRightCap','LevelIndicator'},
+            {'HealthBar','HealthBarLeftCap','HealthBarRightCap','IndicatorBox','BossNameLabel','LevelIndicator'}}
+        for index,spec in ipairs(healthTypes) do
+            local affected={};spec.fields={}
+            for _,field in ipairs(fields[index]) do
+                local setting=field=='BossNameLabel' and 'hideEnemyNames' or (field=='LevelIndicator' and 'hideEnemyDifficultyIcons' or 'hideEnemyHealthBars')
+                if config[setting] then spec.fields[#spec.fields+1]=field end
+                if changed[setting] then affected[#affected+1]=field end
+            end
+            for _,object in ipairs(spec.recent or {}) do queueHealth(object,spec,affected) end
+        end
+    end
+    if changed.showCounterattackDirection or changed.showUnblockableWarning or changed.showDirectionalParry
+        or changed.showLockIcon or changed.combatCueSize then
+        for _,entry in pairs(markerCache) do queueMarker(entry.object) end
+    end
+    ensureFeatureSpecs()
+    -- Existing reveal expiry owns its one deadline; changes cancel/rearm it.
+    if changed.healthThreshold or changed.staminaThreshold or changed.healthHoldSeconds or changed.staminaHoldSeconds
+        or changed.manualPeek or changed.manualPeekSeconds or changed.timeHoldSeconds or changed.switchRevealSeconds then armExpiry() end
+end
+
 if config.hideClawSlashMarks then
     clawMarks=require('QuietDawnClawMarks').new(D,Session,function()wake('clawMarks')end)
 end
@@ -1095,7 +1224,7 @@ if not markerSubscribed then
     print("[Quiet Dawn - Configurable HUD] Marker lifecycle notification unavailable; marker left to the game.")
 end
 for _,spec in ipairs(healthTypes) do
-    if #spec.fields>0 then
+    do
         local subscribedHealth=pcall(NotifyOnNewObject,spec.path,function(object)
             if spec.failedEvent then
                 spec.eventIndex=spec.failedEvent;spec.failedEvent=nil;spec.hookAttempts=0

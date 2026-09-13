@@ -4,8 +4,8 @@ A quiet view of the world, with health and stamina returning when needed.
 
 For **The Blood of Dawnwalker**. Combat, drawing a weapon, lock-on, and focus no longer reveal the general HUD.
 
-- **Enemy information:** health bars, names and difficulty icons are hidden by default, with three independent settings in the optional menu or `settings.ini`. Turn off **Hide enemy health bars** to restore ordinary enemy and boss health bars, their end caps and boss health-phase indicators. Turn off **Hide enemy names** to restore name labels (boss names). Enemy stamina and wounds retain game behavior; combat warnings follow the separate cue settings.
-- **Claw slash marks:** **Hide claw slash marks** hides the red Shredded Touch slash effects on enemies, including the sword variant. It defaults to On and changes only these visuals; damage, bleeding and ordinary blood effects keep their game behavior. Turn it Off under **Combat / Enemies**, or set `hideClawSlashMarks = 0` in `settings.ini`, to show the marks again. Apply, then load a save.
+- **Enemy information:** health bars, names and difficulty icons are hidden by default, with three independent settings in the settings menu or `settings.ini`. Turn off **Hide enemy health bars** to restore ordinary enemy and boss health bars, their end caps and boss health-phase indicators. Turn off **Hide enemy names** to restore name labels (boss names). Enemy stamina and wounds retain game behavior; combat warnings follow the separate cue settings.
+- **Claw slash marks:** **Hide claw slash marks** hides the red Shredded Touch slash effects on enemies, including the sword variant. It defaults to On and changes only these visuals; damage, bleeding and ordinary blood effects keep their game behavior. Turn it Off under **Combat / Enemies**, or set `hideClawSlashMarks = 0` in `settings.ini`, to show the marks again. Apply to save and update the active game.
 - **Enemy lock-on marker:** Four independent Combat cues toggles control counterattack directions, unblockable warnings, directional parry cues and the lock icon. All default to Off. The center dot is always hidden; directions hide the center lock icon.
 - **Player health and stamina:** at their default 0% setting, shown together at full opacity after damage, meaningful healing or stamina use, while health is strictly below **50%**, or while stamina is strictly below **20%**. Vampire health follows the blood bar; human health follows HP.
 - **Hide delay:** **4 seconds** after the last health/blood alert; **1.5 seconds** after the last stamina drop. Further meaningful drops restart the relevant delay; blood fluctuations smaller than 0.2% of the bar do not keep renewing it. Low health or stamina keeps the panel visible without a timeout. Exactly 50% health or 20% stamina does not qualify by itself.
@@ -15,7 +15,7 @@ For **The Blood of Dawnwalker**. Combat, drawing a weapon, lock-on, and focus no
 
 At 0% opacity, Quiet Dawn hides the general HUD between alerts and reveals. Item and ability quickslots appear briefly after using the switch control (3 seconds by default); the double-arrow switch hint stays hidden. The special-attack panel appears only while its cooldown is running. Positive panel opacity keeps the chosen value, subject to the game's visibility rules. All 17 managed panels have 0% to 100% opacity sliders in 5-point steps. Interaction prompts, dialogue, subtitles, notifications and menus retain game behavior. Manual HUD peek reveals the other managed player panels at full opacity; the Focus hint, switch hint and special-attack panel keep their own rules. Enemy health and directional indicators keep their configured behavior.
 
-The Sprint and Haste button prompts stay hidden while running. **Hide sprint/haste prompt** is in the **Controls / Action prompts** section. Turn off **Hide sprint/haste prompt** in the optional menu, or set `hideSprintPrompt = 0` in `settings.ini`, to restore them. Other action prompts retain game behavior, and manual HUD peek keeps running prompts hidden.
+The Sprint and Haste button prompts stay hidden while running. **Hide sprint/haste prompt** is in the **Controls / Action prompts** section. Turn off **Hide sprint/haste prompt** in the settings menu, or set `hideSprintPrompt = 0` in `settings.ini`, to restore them. Other action prompts retain game behavior, and manual HUD peek keeps running prompts hidden.
 
 The Toggle abilities hint (RT with the remapped controller layout) stays hidden in Focus mode and during manual HUD peek. Ability switching still works. Raise Focus activation prompt opacity above 0% to restore the hint.
 
@@ -25,13 +25,13 @@ The time-of-day panel is hidden by default. It appears at full opacity when time
 
 ## Panel size
 
-All 17 player panels have independent size sliders from 25% to 200% in 5% steps, defaulting to 100%. Edge panels grow inward and centered panels stay centered. Original layout spacing stays fixed, so large sizes can overlap nearby elements. Apply, then load a save. Scaling uses each panel's original proportions, including its text and icons. Size is independent of opacity and contextual visibility; 0% opacity still allows a scaled panel to appear during its normal reveal.
+All 17 player panels have independent size sliders from 25% to 200% in 5% steps, defaulting to 100%. Edge panels grow inward and centered panels stay centered. Original layout spacing stays fixed, so large sizes can overlap nearby elements. Apply to save and update the active game. Scaling uses each panel's original proportions, including its text and icons. Size is independent of opacity and contextual visibility; 0% opacity still allows a scaled panel to appear during its normal reveal.
 
-Only initialization, replacement and settings-load events apply transforms; there is no recurring size update. Returning to 100% or disabling the mod restores the original size and scaling origin.
+Only initialization, replacement and settings Apply events apply transforms; there is no recurring size update. Returning to 100% or disabling the mod restores the original size and scaling origin.
 
 ## Requirements
 
-- **Optional:** [Mod Setting Menu 1.0.5 or later](https://www.nexusmods.com/thebloodofdawnwalker/mods/271) provides the in-game settings interface. Quiet Dawn works with its defaults and supports manual `settings.ini` editing without it.
+- Required: [Mod Setting Menu 1.0.6 or later](https://www.nexusmods.com/thebloodofdawnwalker/mods/271).
 - UE4SS for BoD **Framecore 2b** with the bundled native HUD bridge, or a Dawnwalker-compatible UE4SS build with Blueprint script hooks enabled, exposing `ExecuteInGameThreadWithDelay`, `CancelDelayedAction`, `KismetSystemLibrary.GetFrameCount`, and `GetGameTimeInSeconds`. Development reference: commit `97b7e501c`.
 
 ## Installation
@@ -41,21 +41,21 @@ Only initialization, replacement and settings-load events apply transforms; ther
 
 ## Compass
 
-Compass size and opacity work independently. For a smaller, translucent compass, select 25% size and 40% opacity, press Apply, then load a save.
+Compass size and opacity work independently. For a smaller, translucent compass, select 25% size and 40% opacity, press Apply to save and update the active game.
 
-Change Compass opacity in the optional menu, or edit `compassOpacity` in `settings.ini`: 0% hides it; 50% shows it at half opacity; 100% is fully opaque. No separate compass toggle is needed; opacity alone controls visibility. The old Show Compass variant is no longer needed; its preferences can be imported from your backed-up legacy Lua file on first use.
+Change Compass opacity in the settings menu, or edit `compassOpacity` in `settings.ini`: 0% hides it; 50% shows it at half opacity; 100% is fully opaque. No separate compass toggle is needed; opacity alone controls visibility. The old Show Compass variant is no longer needed; its preferences can be imported from your backed-up legacy Lua file on first use.
 
 ## Settings
 
-[Mod Setting Menu 1.0.5 or later](https://www.nexusmods.com/thebloodofdawnwalker/mods/271) is optional. To use it, open Main Menu > Mod Settings > All Mods, select Quiet Dawn, change settings, press Apply, then load a save. Restore discards unapplied changes; Reset selects this mod's defaults. The mod works and can be fully configured without this menu.
+Required: [Mod Setting Menu 1.0.6 or later](https://www.nexusmods.com/thebloodofdawnwalker/mods/271). Open Mod Settings and press Apply to save and update gameplay.
 
 The menu runs from General through Player status, Combat, Exploration and Controls, ending with Diagnostics. Categories are alphabetical within each group, using headings such as Combat / Crosshair and Exploration / Compass. Each panel keeps its size directly after opacity, followed by related thresholds or reveal durations. Combat / Indicators contains counterattack directions, parry cues, unblockable warnings, the lock icon and cue size. Logging remains the final entry.
 
-### Defaults without the menu
+### Defaults
 
 On a fresh install with no saved or imported preferences, the mod is enabled and all 17 player HUD opacities start at 0% (automatic hiding and contextual reveals). All panel sizes start at 100%. Enemy health bars, enemy names, difficulty icons, and sprint/haste prompts are hidden. All four combat cue toggles are Off; cue size is 100%. Health/blood below 50% or stamina below 20% keeps the stat panels visible. Health alerts hold for 4 seconds and stamina alerts for 1.5 seconds. Holding Controls Legend reveals the HUD for 3 seconds; switching quickslots reveals them for 3 seconds; time changes reveal the time panel for 4 seconds. Logging is Off. Existing saved or supported imported preferences take precedence over these defaults.
 
-### Manual configuration without the menu
+### Manual configuration
 
 1. Install Quiet Dawn through Vortex with its required UE4SS loader, then launch the game once. Quiet Dawn creates its own `settings.ini`; you can load a save and play immediately with the defaults.
 2. Close the game and back up that generated file. Open `<game folder>/Dawnwalker/Binaries/Win64/ue4ss/Mods/QuietDawnHUD/settings.ini` in a text editor.
@@ -78,17 +78,17 @@ showDirectionalParry = 1
 
 This shows the compass at half opacity and 75% size and the crosshair at full opacity when the game permits, restores running prompts and enemy health bars/names/difficulty icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
 
-Edit `settings.ini`, not `mod_settings.ini` (the optional menu definition), `Scripts/QuietDawnDefaults.lua` (first-use defaults), or the old import-only files. The menu and manual editing use the same settings file, so adding or removing the menu does not require converting your preferences. Keep a backup before a Vortex reinstall.
+Edit `settings.ini`, not `mod_settings.ini` (the settings menu definition), `Scripts/QuietDawnDefaults.lua` (first-use defaults), or the old import-only files. The menu and manual editing use the same settings file. Back it up before editing.
 
 See [SETTINGS.md](SETTINGS.md) for every key, default, supported value, first-use import, and recovery details.
 
 ## Behavior and performance
 
-Framecore 2b uses a native filter for Quiet Dawn's HUD events. It copies event values into a bounded queue and delivers them through the existing game-thread scheduler. Player alerts take priority over enemy-widget bursts; settings retain their save-load behavior. The helper adds no polling thread or continuous readiness timer.
+Framecore 2b uses a native filter for Quiet Dawn's HUD events. It copies event values into a bounded queue and delivers them through the existing game-thread scheduler. Player alerts take priority over enemy-widget bursts; saved changes update the active session. The helper adds no polling thread or continuous readiness timer.
 
 Player creation and possession can activate the HUD when a loading-screen notification is missed. Readiness checks share one finite window of less than ten seconds; they stop after success or exhaustion and can resume on a later player event. An old world's player cannot activate a new session. Ordinary travel retains the settings snapshot.
 
-Enable **Logging** (the final optional menu entry), or set `debugLogging = 1` in `settings.ini`, for activation and HUD diagnostics in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`. Apply and load a save; restart the game to diagnose an activation failure that prevents the new snapshot from loading. Activation summaries include the event source, readiness attempts, failure reason and aggregate CPU time. Logging is off by default. Hook-registration failures include the exact function path and exception once per hook per session.
+Enable **Logging** (the final menu entry), or set `debugLogging = 1` in `settings.ini`, for activation and HUD diagnostics in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`. Apply to update diagnostics immediately; restart the game to diagnose an activation failure that prevents the new snapshot from loading. Activation summaries include the event source, readiness attempts, failure reason and aggregate CPU time. Logging is off by default. Hook-registration failures include the exact function path and exception once per hook per session.
 
 Lifecycle and preset callbacks initialize/reapply the named panels. Health, blood, and stamina change handlers, plus the stat widgets' event-driven update functions, request a coalesced read of the current player's active resource percentages. The update-function hooks also cover direct event-graph dispatch. Blood-bar capacity changes are covered by the same widget update path. There is no recurring stat sampler. The stamina handler is bound by the shared HUD's vampire stats widget during initialization in both forms. Rapid loss followed by recovery still records the largest loss in that event burst, even if a smaller blood fluctuation follows.
 
@@ -109,3 +109,13 @@ There are no global HUD searches, widget-tree walks, or recurring configuration 
 MIT. Standalone code informed by the author's HUD Tweaks - Fixes work and the game's HUD structure. No game assets or UE4SS runtime DLL are included. The bundled native helper uses UE4SS and Framecore APIs; their authors retain credit for the runtime and hook implementation. See LICENSES for third-party notices.
 
 This mod includes the MIT-licensed [ue4ss-common Lua helpers](https://github.com/my-mods/ue4ss-common). No separate library installation is required. Its license is included in LICENSES/QuietDawnHUD-ue4ss-common.txt.
+
+## Live settings
+
+Mod Setting Menu 1.0.6 or later is required. Its callback bridge also requires `HookProcessConsoleExec = 1` in `UE4SS-settings.ini`. Manage that loader setting through your Vortex loader configuration; this archive contains no replacement global UE4SS INI.
+
+Settings are prepared when the game starts and are available from the main menu before the first save. Press **Apply** to save and update the active game. Changes made while loading are retained for the next valid player. Restore and Discard leave saved settings unchanged; Reset takes effect after Apply.
+
+Only affected panels, resource reveals, combat cues, enemy visuals or prompts are queued. Repeated size changes use the original scale and pivot; returning to 100% restores them. Widget caches and native event bindings remain in place for ordinary changes.
+
+Logging is the final, sole diagnostic control. It changes immediately; verbose logging is Off by default. Logs are written to `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`. Settings are never polled.

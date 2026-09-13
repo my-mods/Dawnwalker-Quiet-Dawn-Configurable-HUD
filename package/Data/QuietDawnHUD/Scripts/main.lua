@@ -2,12 +2,15 @@
 local directory = assert(debug.getinfo(1, 'S').source:sub(2):match('^(.*[/\\])'))
 local function report(message) print('[Save Settings] '..message..'\n') end
 -- Discard this snapshot so menu edits are read afresh by the save-load session.
-local prepared, prepareError = pcall(dofile, directory..'MenuSettings.lua')
+local model=dofile(directory..'SettingsModel.lua')
+local live=dofile(directory..'LiveSettings.lua').new(directory,report)
+local prepared,prepareError=pcall(model.load)
+if prepared then live.seed(prepareError) end
 if not prepared then report('Menu settings preparation failed: '..tostring(prepareError)) end
-local diagnostics = {debugLogging=prepared and type(prepareError)=='table' and prepareError.debugLogging==true}
+local diagnostics = {debugLogging=prepared and type(prepareError)=='table' and prepareError.debugLogging==1}
 local api = setmetatable({SaveLoadDiagnostics=diagnostics}, {__index=_G})
 local bridge=dofile(directory..'QuietDawnNative.lua').attach(api,report)
-local session = dofile(directory..'UE4SSCommonSession.lua').new(api, directory, report)
+local session = dofile(directory..'UE4SSCommonSession.lua').new(api, directory, report,{settings=live,loadSettings=model.load})
 if bridge then
     for _,name in ipairs({'pause','close'}) do
         local original=session[name]

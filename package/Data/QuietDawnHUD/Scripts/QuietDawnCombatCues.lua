@@ -40,28 +40,32 @@ function M.new(config, diagnostics, session)
         end
         saved.last=value
     end
-    local function scale(o, factor, saved)
-        if factor==1 then return saved end
+    local function scale(o,factor,saved)
+        if factor==1 and not saved then return end
         local address=o:GetAddress()
-        if saved and saved.address==address and saved.same() then return saved end
-        local same=identity(o)
-        -- Copy numbers immediately; no borrowed transform survives this call.
-        local x,y=o.RenderTransform.Scale.X,o.RenderTransform.Scale.Y
-        for _,axis in ipairs({'X','Y'}) do
-            local target=(axis=='X' and x or y)*factor
-            session.change('cue-scale:'..tostring(o:GetAddress())..':'..axis,function()
-                if not same() then return nil,false end
-                local ok,value=pcall(function()return o.RenderTransform.Scale[axis]end)
-                if not ok or type(value)~='number' then return nil,false end
-                return value
-            end,function(value)
-                assert(same(),'Combat cue scale owner changed')
-                local sx,sy=o.RenderTransform.Scale.X,o.RenderTransform.Scale.Y
-                o:SetRenderScale({X=axis=='X' and value or sx,Y=axis=='Y' and value or sy})
-                return true -- yield between native restores
-            end,target)
+        if saved and saved.address==address and saved.same() and saved.factor==factor then return saved end
+        if not saved or saved.address~=address or not saved.same() then
+            local x,y=o.RenderTransform.Scale.X,o.RenderTransform.Scale.Y
+            saved={address=address,same=identity(o),x=x,y=y}
         end
-        return {address=address,same=same}
+        for _,axis in ipairs({'X','Y'}) do
+            local target=(axis=='X' and saved.x or saved.y)*factor
+            local key='cue-scale:'..tostring(address)..':'..axis
+            if factor==1 then session.restore(key)
+            else
+                session.change(key,function()
+                    if not saved.same() then return nil,false end
+                    return o.RenderTransform.Scale[axis]
+                end,function(value)
+                    assert(saved.same(),'Combat cue scale owner changed')
+                    local x,y=o.RenderTransform.Scale.X,o.RenderTransform.Scale.Y
+                    o:SetRenderScale({X=axis=='X' and value or x,Y=axis=='Y' and value or y})
+                    return true
+                end,target)
+            end
+        end
+        saved.factor=factor
+        return saved
     end
     local function attach(object, entry)
         local children={}
