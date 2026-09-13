@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Organize menu categories into Player status, Combat, Exploration and Controls, alphabetically within each group, with General first and Diagnostics last.
+
 - Fix panel size changes getting stuck at partial opacity, including a compass set to 25% size and 40% opacity.
 
 - Add Hide claw slash marks, an On/Off setting for the red Shredded Touch hit effects and sword variant, enabled by default. Preserve damage, bleeding and ordinary blood effects.

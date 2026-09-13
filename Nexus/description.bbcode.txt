@@ -49,7 +49,7 @@ Keep the world in view, with health and stamina returning when needed. Choose au
 
 With the optional menu, open Main Menu > Mod Settings > All Mods, select Quiet Dawn, adjust settings and press Apply, then load a save. Restore discards unapplied changes; Reset selects the defaults.
 
-Settings are grouped by HUD panel, with size immediately after opacity and related thresholds or reveal durations together. Health and stamina shares the controls used by the human and vampire stat panels; Time of day and Quickslots each include their reveal duration. Combat cues keeps the counterattack, unblockable, parry, lock-icon and size controls together. HUD peek has its own section, and Logging remains the final entry under Diagnostics.
+The menu runs from General through Player status, Combat, Exploration and Controls, ending with Diagnostics. Categories are alphabetical within each group, using headings such as Combat / Crosshair and Exploration / Compass. Each panel keeps its size directly after opacity, followed by related thresholds or reveal durations. Combat / Indicators contains counterattack directions, parry cues, unblockable warnings, the lock icon and cue size. Logging remains the final entry.
 
 Without the menu, launch the game once to generate the settings file. Close the game, back up that file and edit its existing [Settings] entries:
 
