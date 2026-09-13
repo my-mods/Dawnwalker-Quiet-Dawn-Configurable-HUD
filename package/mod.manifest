@@ -3,7 +3,7 @@
   <info>
     <name>Quiet Dawn - Configurable HUD</name>
     <modid>QuietDawnHUD</modid>
-    <description>Quiet HUD with a 3-second player HUD peek on the Controls Legend hold gesture, and full-opacity health alerts below 50% or for 4 seconds after HP/blood loss. Stamina reveals below 20% or for 1.5 seconds after use. Enemy health bars hidden; directional indicators follow the menu setting.</description>
+    <description>Quiet HUD with a 3-second player HUD peek on the Controls Legend hold gesture, and full-opacity health alerts below 50% or for 4 seconds after HP/blood loss. Stamina reveals below 20% or for 1.5 seconds after use. Enemy health bars, names and difficulty icons have separate visibility settings; combat cues follow their menu settings.</description>
     <author>my-mods</author>
     <version>0.0.0</version>
     <created_on>2026-09-06</created_on>

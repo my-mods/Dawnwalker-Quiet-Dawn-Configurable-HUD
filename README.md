@@ -4,7 +4,7 @@ A quiet view of the world, with health and stamina returning when needed.
 
 For **The Blood of Dawnwalker**. Combat, drawing a weapon, lock-on, and focus no longer reveal the general HUD.
 
-- **Enemy health:** health bars and their end caps stay hidden for ordinary enemies and bosses, including boss health-phase indicators. Enemy names and difficulty icons are hidden by default, with separate settings in the optional menu or `settings.ini`. Enemy stamina, wounds and combat warnings retain game behavior.
+- **Enemy information:** health bars, names and difficulty icons are hidden by default, with three independent settings in the optional menu or `settings.ini`. Turn off **Hide enemy health bars** to restore ordinary enemy and boss health bars, their end caps and boss health-phase indicators. Turn off **Hide enemy names** to restore name labels (boss names). Enemy stamina and wounds retain game behavior; combat warnings follow the separate cue settings.
 - **Enemy lock-on marker:** Four independent Combat cues toggles control counterattack directions, unblockable warnings, directional parry cues and the lock icon. All default to Off. The center dot is always hidden; directions hide the center lock icon.
 - **Player health and stamina:** at their default 0% setting, shown together at full opacity after damage, meaningful healing or stamina use, while health is strictly below **50%**, or while stamina is strictly below **20%**. Vampire health follows the blood bar; human health follows HP.
 - **Hide delay:** **4 seconds** after the last health/blood alert; **1.5 seconds** after the last stamina drop. Further meaningful drops restart the relevant delay; blood fluctuations smaller than 0.2% of the bar do not keep renewing it. Low health or stamina keeps the panel visible without a timeout. Exactly 50% health or 20% stamina does not qualify by itself.
@@ -57,13 +57,14 @@ Example edits to the matching existing lines (this is not a complete settings fi
 compassOpacity = 50
 opacity_Crosshair = 100
 hideSprintPrompt = 0
+hideEnemyHealthBars = 0
 hideEnemyNames = 0
 hideEnemyDifficultyIcons = 0
 showCounterattackDirection = 1
 showDirectionalParry = 1
 ```
 
-This shows the compass at half opacity and the crosshair at full opacity when the game permits, restores running prompts and enemy labels/icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
+This shows the compass at half opacity and the crosshair at full opacity when the game permits, restores running prompts and enemy health bars/names/difficulty icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
 
 Edit `settings.ini`, not `mod_settings.ini` (the optional menu definition), `Scripts/QuietDawnDefaults.lua` (first-use defaults), or the old import-only files. The menu and manual editing use the same settings file, so adding or removing the menu does not require converting your preferences. Keep a backup before a Vortex reinstall.
 

@@ -63,7 +63,7 @@ local values, err = Store.load(directory, compatibleSchema, function()
     return result, nil, sources
 end)
 if not values and err and err:match('^Missing setting:') then
-    local defaults={showUnblockableWarning=0,showDirectionalParry=0,showLockIcon=0,combatCueSize=100,showCounterattackDirection=0,hideSprintPrompt=1,hideEnemyNames=1, hideEnemyDifficultyIcons=1, opacity_WBP_HudTimer=0, timeHoldSeconds=4, switchRevealSeconds=3}
+    local defaults={hideEnemyHealthBars=1,showUnblockableWarning=0,showDirectionalParry=0,showLockIcon=0,combatCueSize=100,showCounterattackDirection=0,hideSprintPrompt=1,hideEnemyNames=1, hideEnemyDifficultyIcons=1, opacity_WBP_HudTimer=0, timeHoldSeconds=4, switchRevealSeconds=3}
     local path=Store.path(directory)
     local text=Store.read(path)
     -- New keys avoid interpreting an old On=1 switch as 1% opacity. Require
@@ -86,7 +86,7 @@ if not values and err and err:match('^Missing setting:') then
         end
     end
     values, err = dofile(directory..'UE4SSCommonSettingsUpgrade.lua').ensure(
-        Store, path, compatibleSchema, defaults, 'combat-cues')
+        Store, path, compatibleSchema, defaults, 'enemy-health-bars')
 end
 if values then
     local needsUpgrade=false
@@ -97,6 +97,7 @@ if values then
 end
 if not values then print('[Quiet Dawn - Configurable HUD] Settings rejected: '..tostring(err));return {enabled=false,panels={},debugLogging=false} end
 values.enabled=values.enabled==1;values.manualPeek=values.manualPeek==1;values.debugLogging=values.debugLogging==1
+values.hideEnemyHealthBars=values.hideEnemyHealthBars==1
 values.hideEnemyNames=values.hideEnemyNames==1
 values.hideEnemyDifficultyIcons=values.hideEnemyDifficultyIcons==1
 values.showCounterattackDirection=values.showCounterattackDirection==1

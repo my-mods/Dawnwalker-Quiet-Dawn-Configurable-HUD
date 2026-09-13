@@ -370,17 +370,17 @@ local function markerStep()
 end
 markerStep=D.wrap("marker",markerStep)
 markerHooksStep=D.wrap("hook",markerHooksStep)
--- Enemy bars live outside WBP_GameHUD. Health is always hidden; name and
--- difficulty children follow independent settings. Stamina, wounds and
+-- Enemy bars live outside WBP_GameHUD. Health, name and difficulty children
+-- follow independent settings. Stamina, wounds and
 -- combat warnings stay under game control.
 -- Build 25232147: these named children and lifecycle functions are exported
 -- by WBP_CombatCharacterBar and WBP_Combat_BossBar.
 local healthTypes = {
     {path="/Game/_Dawnwalker/UI/_Unified/Combat/WBP_CombatCharacterBar.WBP_CombatCharacterBar_C",
-     fields={"SegmentedHealthBar","HealthBarLeftCap","HealthBarRightCap"},
+     fields=config.hideEnemyHealthBars and {"SegmentedHealthBar","HealthBarLeftCap","HealthBarRightCap"} or {},
      events={"Construct","UpdateTarget"}},
     {path="/Game/_Dawnwalker/UI/_Unified/Combat/WBP_Combat_BossBar.WBP_Combat_BossBar_C",
-     fields={"HealthBar","HealthBarLeftCap","HealthBarRightCap","IndicatorBox"},
+     fields=config.hideEnemyHealthBars and {"HealthBar","HealthBarLeftCap","HealthBarRightCap","IndicatorBox"} or {},
      events={"Update Owner"}},
 }
 -- The ordinary bar has no name label; boss names use BossNameLabel.
@@ -400,7 +400,7 @@ local function healthReady()
     return healthFirst<=healthLast and candidate==nil and valid(hud)
 end
 local function queueHealth(object, spec)
-    if object==nil then return end
+    if object==nil or #spec.fields==0 then return end
     if healthPending[object] then healthPending[object].again=true;return end
     if healthLast-healthFirst+1>=64 then
         if D.debugLogging then D.count("enemyHealthQueueFull") end
@@ -1069,13 +1069,15 @@ if not markerSubscribed then
     print("[Quiet Dawn - Configurable HUD] Marker lifecycle notification unavailable; marker left to the game.")
 end
 for _,spec in ipairs(healthTypes) do
-    local subscribedHealth=pcall(NotifyOnNewObject,spec.path,function(object)
-        if spec.failedEvent then
-            spec.eventIndex=spec.failedEvent;spec.failedEvent=nil;spec.hookAttempts=0
-        end
-        queueHealth(object,spec)
-    end)
-    if not subscribedHealth then print("[Quiet Dawn - Configurable HUD] Enemy health notification unavailable: "..spec.path) end
+    if #spec.fields>0 then
+        local subscribedHealth=pcall(NotifyOnNewObject,spec.path,function(object)
+            if spec.failedEvent then
+                spec.eventIndex=spec.failedEvent;spec.failedEvent=nil;spec.hookAttempts=0
+            end
+            queueHealth(object,spec)
+        end)
+        if not subscribedHealth then print("[Quiet Dawn - Configurable HUD] Enemy health notification unavailable: "..spec.path) end
+    end
 end
 -- At most one outstanding hide deadline. It reads cached percentages and the
 -- game clock only. A pause/extended hold reschedules its remaining delay; once

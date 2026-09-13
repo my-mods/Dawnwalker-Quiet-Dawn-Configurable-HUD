@@ -2,6 +2,7 @@
 -- Read once at startup. Restart the game after editing.
 return {
     enabled = true,
+    hideEnemyHealthBars = true,
     hideEnemyNames = true,
     hideEnemyDifficultyIcons = true,
     showCounterattackDirection = false,

@@ -4,7 +4,7 @@ A quiet view of the world, with health and stamina returning when needed.
 
 For **The Blood of Dawnwalker**. Combat, drawing a weapon, lock-on, and focus no longer reveal the general HUD.
 
-- **Enemy health:** health bars and their end caps stay hidden for ordinary enemies and bosses, including boss health-phase indicators. Enemy names and difficulty icons are hidden by default, with separate settings in the optional menu or `settings.ini`. Enemy stamina, wounds and combat warnings retain game behavior.
+- **Enemy information:** health bars, names and difficulty icons are hidden by default, with three independent settings in the optional menu or `settings.ini`. Turn off **Hide enemy health bars** to restore ordinary enemy and boss health bars, their end caps and boss health-phase indicators. Turn off **Hide enemy names** to restore name labels (boss names). Enemy stamina and wounds retain game behavior; combat warnings follow the separate cue settings.
 - **Enemy lock-on marker:** Four independent Combat cues toggles control counterattack directions, unblockable warnings, directional parry cues and the lock icon. All default to Off. The center dot is always hidden; directions hide the center lock icon.
 - **Player health and stamina:** at their default 0% setting, shown together at full opacity after damage, meaningful healing or stamina use, while health is strictly below **50%**, or while stamina is strictly below **20%**. Vampire health follows the blood bar; human health follows HP.
 - **Hide delay:** **4 seconds** after the last health/blood alert; **1.5 seconds** after the last stamina drop. Further meaningful drops restart the relevant delay; blood fluctuations smaller than 0.2% of the bar do not keep renewing it. Low health or stamina keeps the panel visible without a timeout. Exactly 50% health or 20% stamina does not qualify by itself.
@@ -57,13 +57,14 @@ Example edits to the matching existing lines (this is not a complete settings fi
 compassOpacity = 50
 opacity_Crosshair = 100
 hideSprintPrompt = 0
+hideEnemyHealthBars = 0
 hideEnemyNames = 0
 hideEnemyDifficultyIcons = 0
 showCounterattackDirection = 1
 showDirectionalParry = 1
 ```
 
-This shows the compass at half opacity and the crosshair at full opacity when the game permits, restores running prompts and enemy labels/icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
+This shows the compass at half opacity and the crosshair at full opacity when the game permits, restores running prompts and enemy health bars/names/difficulty icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
 
 Edit `settings.ini`, not `mod_settings.ini` (the optional menu definition), `Scripts/QuietDawnDefaults.lua` (first-use defaults), or the old import-only files. The menu and manual editing use the same settings file, so adding or removing the menu does not require converting your preferences. Keep a backup before a Vortex reinstall.
 
@@ -116,30 +117,32 @@ Example edits to the matching existing lines (this is not a complete settings fi
 compassOpacity = 50
 opacity_Crosshair = 100
 hideSprintPrompt = 0
+hideEnemyHealthBars = 0
 hideEnemyNames = 0
 hideEnemyDifficultyIcons = 0
 showCounterattackDirection = 1
 showDirectionalParry = 1
 ```
 
-This shows the compass at half opacity and the crosshair at full opacity when the game permits, restores running prompts and enemy labels/icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
+This shows the compass at half opacity and the crosshair at full opacity when the game permits, restores running prompts and enemy health bars/names/difficulty icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
 
 Edit `settings.ini`, not `mod_settings.ini` (the optional menu definition), `Scripts/QuietDawnDefaults.lua` (first-use defaults), or the old import-only files. The menu and manual editing use the same settings file, so adding or removing the menu does not require converting your preferences. Keep a backup before a Vortex reinstall.
 
 The stable menu ID is `oOCamilleOo_QuietDawnHUD`. The mod generates `settings.ini` beside `mod_settings.ini` in its UE4SS mod folder. This generated file is the authoritative settings store and is not shipped in the ZIP. Existing supported preferences are imported on first use. After the new settings are saved and verified, the successfully imported legacy files are deleted if their contents are unchanged. Migration or save failures retain the originals. Cleanup failures are logged and do not prevent using the new settings. Files left by an earlier migration are not deleted automatically. Back up `settings.ini` before removing/reinstalling the mod or moving its folder. Restore that backup into the same runtime folder before launching. Do not restore an old INI over it.
 
-Missing existing settings, duplicate or invalid settings stop configuration loading and are reported in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`. Preserve the file before correcting it. If a menu save fails, preserve its temporary/backup files and follow the menu’s recovery instructions. Startup prepares the settings file once, including any supported upgrade. Gameplay reads a fresh settings snapshot when a save loads. Waiting at the main menu performs no recurring settings work; travel and possession events use the current snapshot. Settings are never polled. `debugLogging` controls additional diagnostic logging; it defaults to Off.
+Missing existing settings, duplicate or invalid settings stop configuration loading and are reported in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`. Preserve the file before correcting it. If a menu save fails, preserve its temporary/backup files and follow the menuâ€™s recovery instructions. Startup prepares the settings file once, including any supported upgrade. Gameplay reads a fresh settings snapshot when a save loads. Waiting at the main menu performs no recurring settings work; travel and possession events use the current snapshot. Settings are never polled. `debugLogging` controls additional diagnostic logging; it defaults to Off.
 
 | Group | Setting | Choices or range |
 | --- | --- | --- |
 | General | Enabled | Off, On |
+| Enemies | Hide enemy health bars | Off, On (default On) |
 | Enemies | Hide enemy names | Off, On |
 | Enemies | Hide enemy difficulty icons | Off, On |
 | Combat cues | Show counterattack direction | Off (default), On |
 | Combat cues | Show unblockable warning | Off (default), On |
 | Combat cues | Show directional parry cues | Off (default), On |
 | Combat cues | Show lock icon | Off (default), On |
-| Combat cues | Combat cue size | 10%–200%, step 10%; default 100% |
+| Combat cues | Combat cue size | 10%â€“200%, step 10%; default 100% |
 | Vitals | Keep health visible below | 0% to 100% in 5-point steps (default 50%) |
 | Vitals | Keep stamina visible below | 0% to 100% in 5-point steps (default 20%) |
 | Vitals | Health / blood hold duration | 0 to 10 seconds in 0.5-second steps |
@@ -168,7 +171,7 @@ Missing existing settings, duplicate or invalid settings stop configuration load
 | HUD visibility | Experience bar opacity | 0% to 100% in 5-point steps |
 | Diagnostics | Logging | Off, On |
 
-Turn off **Hide enemy names** to restore enemy name labels (boss names), or **Hide enemy difficulty icons** to restore difficulty indicators for ordinary enemies and bosses. The choices are independent. Apply, then load a save. The player HUD peek keeps both choices in effect. At startup, older settings files receive any missing enemy-label options, set to On. Existing preferences and comments are preserved.
+Turn off **Hide enemy health bars** to restore ordinary enemy and boss health bars, end caps and boss health-phase indicators. Turn off **Hide enemy names** to restore name labels (boss names), or **Hide enemy difficulty icons** to restore difficulty indicators. All three choices are independent and restore the game's normal visibility for that information. Apply, then load a save. The player HUD peek keeps these choices in effect. At startup, older settings files receive any missing enemy-information options, set to On. Existing preferences and comments are preserved, with a backup before adding missing options.
 
 The four Combat cues toggles work independently of the game's Directional Indicator option. Counterattack directions show the attack opening after a perfect parry; unblockable warnings show the skull; directional parry cues show the incoming direction and highlight its arrow during the parry window; the lock option shows a padlock on a hard-locked target between cues. The dot stays hidden and directions hide all center lock icons. All four toggles default to Off. Combat cue size scales the whole cue group from 10% to 200% in 10% steps, defaulting to 100%. Apply, then load a save. Existing counterattack choices are retained when adding the new controls. Logging reports the observed icon, selected arrow or warning, lock state, size and readiness failures in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`.
 
@@ -209,6 +212,7 @@ All entries below belong under `[Settings]`. Defaults apply to a fresh install w
 | Setting | INI key | Default | Supported manual values |
 | --- | --- | --- | --- |
 | Enabled | `enabled` | `1` | 0 = Off, 1 = On |
+| Hide enemy health bars | `hideEnemyHealthBars` | `1` | 0 = Off, 1 = On |
 | Hide enemy names | `hideEnemyNames` | `1` | 0 = Off, 1 = On |
 | Hide enemy difficulty icons | `hideEnemyDifficultyIcons` | `1` | 0 = Off, 1 = On |
 | Show counterattack direction | `showCounterattackDirection` | `0` | 0 = Off, 1 = On |

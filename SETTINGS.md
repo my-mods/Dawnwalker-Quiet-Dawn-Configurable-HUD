@@ -19,13 +19,14 @@ Example edits to the matching existing lines (this is not a complete settings fi
 compassOpacity = 50
 opacity_Crosshair = 100
 hideSprintPrompt = 0
+hideEnemyHealthBars = 0
 hideEnemyNames = 0
 hideEnemyDifficultyIcons = 0
 showCounterattackDirection = 1
 showDirectionalParry = 1
 ```
 
-This shows the compass at half opacity and the crosshair at full opacity when the game permits, restores running prompts and enemy labels/icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
+This shows the compass at half opacity and the crosshair at full opacity when the game permits, restores running prompts and enemy health bars/names/difficulty icons, and enables counterattack and parry directions. Other preferences stay as saved. Set any option back to its listed default to restore that behavior.
 
 Edit `settings.ini`, not `mod_settings.ini` (the optional menu definition), `Scripts/QuietDawnDefaults.lua` (first-use defaults), or the old import-only files. The menu and manual editing use the same settings file, so adding or removing the menu does not require converting your preferences. Keep a backup before a Vortex reinstall.
 
@@ -36,6 +37,7 @@ Missing existing settings, duplicate or invalid settings stop configuration load
 | Group | Setting | Choices or range |
 | --- | --- | --- |
 | General | Enabled | Off, On |
+| Enemies | Hide enemy health bars | Off, On (default On) |
 | Enemies | Hide enemy names | Off, On |
 | Enemies | Hide enemy difficulty icons | Off, On |
 | Combat cues | Show counterattack direction | Off (default), On |
@@ -71,7 +73,7 @@ Missing existing settings, duplicate or invalid settings stop configuration load
 | HUD visibility | Experience bar opacity | 0% to 100% in 5-point steps |
 | Diagnostics | Logging | Off, On |
 
-Turn off **Hide enemy names** to restore enemy name labels (boss names), or **Hide enemy difficulty icons** to restore difficulty indicators for ordinary enemies and bosses. The choices are independent. Apply, then load a save. The player HUD peek keeps both choices in effect. At startup, older settings files receive any missing enemy-label options, set to On. Existing preferences and comments are preserved.
+Turn off **Hide enemy health bars** to restore ordinary enemy and boss health bars, end caps and boss health-phase indicators. Turn off **Hide enemy names** to restore name labels (boss names), or **Hide enemy difficulty icons** to restore difficulty indicators. All three choices are independent and restore the game's normal visibility for that information. Apply, then load a save. The player HUD peek keeps these choices in effect. At startup, older settings files receive any missing enemy-information options, set to On. Existing preferences and comments are preserved, with a backup before adding missing options.
 
 The four Combat cues toggles work independently of the game's Directional Indicator option. Counterattack directions show the attack opening after a perfect parry; unblockable warnings show the skull; directional parry cues show the incoming direction and highlight its arrow during the parry window; the lock option shows a padlock on a hard-locked target between cues. The dot stays hidden and directions hide all center lock icons. All four toggles default to Off. Combat cue size scales the whole cue group from 10% to 200% in 10% steps, defaulting to 100%. Apply, then load a save. Existing counterattack choices are retained when adding the new controls. Logging reports the observed icon, selected arrow or warning, lock state, size and readiness failures in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`.
 
@@ -112,6 +114,7 @@ All entries below belong under `[Settings]`. Defaults apply to a fresh install w
 | Setting | INI key | Default | Supported manual values |
 | --- | --- | --- | --- |
 | Enabled | `enabled` | `1` | 0 = Off, 1 = On |
+| Hide enemy health bars | `hideEnemyHealthBars` | `1` | 0 = Off, 1 = On |
 | Hide enemy names | `hideEnemyNames` | `1` | 0 = Off, 1 = On |
 | Hide enemy difficulty icons | `hideEnemyDifficultyIcons` | `1` | 0 = Off, 1 = On |
 | Show counterattack direction | `showCounterattackDirection` | `0` | 0 = Off, 1 = On |

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add Hide enemy health bars, an independent setting to restore ordinary enemy and boss health bars, end caps and boss health-phase indicators. Names and difficulty icons retain their separate toggles.
+
 - Lower the health and blood regeneration reveal threshold from 1% to 0.2% of the bar, so smaller gains show the panel and refresh its health alert timer.
 
 - Fix duplicate HUD visibility sections by placing Hide sprint/haste prompt first with the other HUD controls.
