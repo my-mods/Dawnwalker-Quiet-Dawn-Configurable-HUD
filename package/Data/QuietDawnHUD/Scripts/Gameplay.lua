@@ -525,7 +525,7 @@ end
 healthStep=D.wrap("enemyHealth",healthStep)
 local healthTurn=false
 local sprintPrompts=config.hideSprintPrompt and require("QuietDawnSprintPrompt").new({
-    StaticFindObject=StaticFindObject,opacity=opacity,D=D}) or nil
+    StaticFindObject=StaticFindObject,FName=FName,opacity=opacity,D=D}) or nil
 local PROMPT_WIDGET="/Game/_Dawnwalker/UI/_Unified/Gameplay/InputPrompt/WBP_InputPrompt.WBP_InputPrompt_C"
 local PROMPT_REFRESH=PROMPT_WIDGET..":UpdateWidget"
 local promptTurn=false
@@ -1202,7 +1202,7 @@ applyLiveSettings=function(run)
     end
     if changed.hideSprintPrompt then
         if not sprintPrompts and config.hideSprintPrompt then
-            sprintPrompts=require('QuietDawnSprintPrompt').new({StaticFindObject=StaticFindObject,opacity=opacity,D=D})
+            sprintPrompts=require('QuietDawnSprintPrompt').new({StaticFindObject=StaticFindObject,FName=FName,opacity=opacity,D=D})
         end
         if sprintPrompts then sprintPrompts.setEnabled(config.hideSprintPrompt);sprintPrompts.queue(hud) end
     end
