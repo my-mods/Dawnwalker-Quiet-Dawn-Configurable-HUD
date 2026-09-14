@@ -19,6 +19,7 @@
 #include <mutex>
 #include <cstring>
 #include "EventQueue.hpp"
+#include "SprintPrompts.hpp"
 
 // Public exported declaration in LuaType/LuaUObject.hpp. Keep its heavy
 // template implementation out of this translation unit; conversion belongs
@@ -269,7 +270,9 @@ public:
     void on_lua_start(StringViewType name,Lua& lua,Lua&,Lua&,Lua*) override {
         if (name!=STR("QuietDawnHUD")) return;
         // Full-feature loader/profile: leave RegisterHook with its usual owner.
-        if (!supportedRuntime() || UnrealInitializer::StaticStorage::GlobalConfig.bHookProcessLocalScriptFunction) return;
+        if (!supportedRuntime()) return;
+        QuietDawn::SprintPrompts::registerLua(lua);
+        if (UnrealInitializer::StaticStorage::GlobalConfig.bHookProcessLocalScriptFunction) return;
         auto s=state; current=s;
         s->mod=get_mod_ref(lua);
         lua.register_function("_QDNInit",[](const Lua& l) {
@@ -349,10 +352,12 @@ public:
     }
     void on_lua_stop(StringViewType name,Lua&,Lua&,Lua&,Lua*) override {
         if (name!=STR("QuietDawnHUD")) return;
+        QuietDawn::SprintPrompts::stop();
         std::lock_guard lock(state->mutex); state->active=false; state->mod=nullptr;
         state->actionRef=LUA_NOREF; state->queue.clear(); state->pending=false;
     }
     ~QuietDawnMod() override {
+        QuietDawn::SprintPrompts::shutdown();
         state->active=false;
         if(state->hook!=Hook::ERROR_ID) Hook::UnregisterCallback(state->hook);
         state->detach();

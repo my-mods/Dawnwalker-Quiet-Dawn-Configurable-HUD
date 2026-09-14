@@ -1,7 +1,7 @@
 -- Quiet Dawn - Configurable HUD. MIT.
--- Build 25232147: resolve the game's localized Sprint/Haste labels directly.
--- UE4SS flattens FText inputs, so passing text back to an identity query loses
--- its string-table history. Never hard-code English labels or shared buttons.
+-- Build 25232147: native string-table identity cleans up existing prompts.
+-- Other loaders retain localized-label detection; UE4SS's Lua FText inputs
+-- flatten their history, so native identity must copy the original in C++.
 local M = {}
 function M.new(api)
     local fields={"WBP_InputPrompt","WBP_SecondInputPrompt"}
@@ -12,6 +12,11 @@ function M.new(api)
     local function valid(object) return object~=nil and object:IsValid() end
     local function same(a,b) return valid(a) and valid(b) and a:GetAddress()==b:GetAddress() end
     local function classify(object)
+        if api.source and api.source.ready() then
+            local hide=api.source.classify(object)
+            local label=api.D.debugLogging and object["Prompt Text"]:ToString() or ""
+            return hide,label,hide and "native-string-table" or nil
+        end
         local label=object["Prompt Text"]:ToString()
         if type(label)~="string" or label=="" then return false,"" end
         -- Consume return text immediately; retain no FText/borrowed return
@@ -37,8 +42,9 @@ function M.new(api)
         if not self.pending(hud) then return end
         -- One lookup OR one named prompt per existing worker frame. Missing
         -- readiness gets eight attempts, then sleeps until another HUD event.
-        if enabled and not tableName then tableName=api.FName(tableId);return end
-        if enabled and (not valid(library) or not valid(tableLibrary)) then
+        local nativeReady=api.source and api.source.ready()
+        if enabled and not nativeReady and not tableName then tableName=api.FName(tableId);return end
+        if enabled and not nativeReady and (not valid(library) or not valid(tableLibrary)) then
             attempts=attempts+1
             local found
             if not valid(library) then

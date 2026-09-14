@@ -524,8 +524,11 @@ local function healthStep()
 end
 healthStep=D.wrap("enemyHealth",healthStep)
 local healthTurn=false
+local sprintSource=require("QuietDawnSprintSource").new({
+    _QDNSprintConfigure=_QDNSprintConfigure,_QDNIsSprintPrompt=_QDNIsSprintPrompt},D,Session)
+sprintSource.configure(config.hideSprintPrompt)
 local sprintPrompts=config.hideSprintPrompt and require("QuietDawnSprintPrompt").new({
-    StaticFindObject=StaticFindObject,FName=FName,opacity=opacity,D=D}) or nil
+    StaticFindObject=StaticFindObject,FName=FName,opacity=opacity,D=D,source=sprintSource}) or nil
 local PROMPT_WIDGET="/Game/_Dawnwalker/UI/_Unified/Gameplay/InputPrompt/WBP_InputPrompt.WBP_InputPrompt_C"
 local PROMPT_REFRESH=PROMPT_WIDGET..":UpdateWidget"
 local promptTurn=false
@@ -558,6 +561,7 @@ local function signal()
     wake()
 end
 local function capture(context)
+    sprintSource.recover()
     statsRefresh=true
     candidate = unwrap(context)
     wake()
@@ -939,6 +943,7 @@ local timeTurn=false
 local timeSampleTurn=false
 local function step()
     if livePending then applyLiveSettings(true);return false end
+    if sprintSource.pending() then sprintSource.step();return false end
     -- At most one hook registration OR one state snapshot OR one direct panel
     -- read/write per callback. 16 ms delay yields to a later game frame.
     if clawMarks and clawMarks.pending() then
@@ -1201,11 +1206,13 @@ applyLiveSettings=function(run)
         livePanels.WBP_HUD_Quickslots,livePanels.WBP_AA_Quickslots=true,true
     end
     if changed.hideSprintPrompt then
+        sprintSource.configure(config.hideSprintPrompt)
         if not sprintPrompts and config.hideSprintPrompt then
-            sprintPrompts=require('QuietDawnSprintPrompt').new({StaticFindObject=StaticFindObject,FName=FName,opacity=opacity,D=D})
+            sprintPrompts=require('QuietDawnSprintPrompt').new({StaticFindObject=StaticFindObject,FName=FName,opacity=opacity,D=D,source=sprintSource})
         end
         if sprintPrompts then sprintPrompts.setEnabled(config.hideSprintPrompt);sprintPrompts.queue(hud) end
     end
+    if changed.debugLogging and not changed.hideSprintPrompt then sprintSource.configure(config.hideSprintPrompt) end
     if changed.hideClawSlashMarks then
         if not clawMarks and config.hideClawSlashMarks then
             clawMarks=require('QuietDawnClawMarks').new(D,Session,function()wake('clawMarks')end)
@@ -1240,6 +1247,7 @@ if config.hideClawSlashMarks then
 end
 local subscribed = pcall(NotifyOnNewObject, ROOT, function(object)
     candidate=object -- construction is not readiness: defer all object reads
+    sprintSource.recover()
     wake()
 end)
 if not subscribed then

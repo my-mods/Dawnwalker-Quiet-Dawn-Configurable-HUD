@@ -14,7 +14,7 @@
   },
   "runtimeSources": {
     "package/Data/QuietDawnHUD/Scripts/dmm_api.lua": "6bb667bffc543d1c5c1b36ab6da66c621d6c81c9ee46f94f0f6339cae9cc884c",
-    "package/Data/QuietDawnHUD/Scripts/Gameplay.lua": "1738197f1d8f8ac005f5b345cb4d7acf3b3a11bd56856f12fc5032c00bc27cca",
+    "package/Data/QuietDawnHUD/Scripts/Gameplay.lua": "fc3d7a92151f8c6cf94e5714d11e4779a2ad57489fd6de8c982d8ef1a5526f42",
     "package/Data/QuietDawnHUD/Scripts/LiveSettings.lua": "448091521b08451298bbeec2c2e9ef175e9528af4d449cf1e5a04aa96ce3aa31",
     "package/Data/QuietDawnHUD/Scripts/main.lua": "e28c50a36ada47dbb21a2fe1aa2a4cd478fdc77fd490bae8019b253b0b1a04fd",
     "package/Data/QuietDawnHUD/Scripts/MenuSettings.lua": "944cc45747f5f8ca5b562b5830c29df7593307349609c6907a4db89bb2d15451",
@@ -24,7 +24,7 @@
     "package/Data/QuietDawnHUD/Scripts/QuietDawnDiagnostics.lua": "3ba6e80a7141faf9ca023e3f04ccd34e1d3b5e1962c2b512c8422749c84d5898",
     "package/Data/QuietDawnHUD/Scripts/QuietDawnNative.lua": "a3afdcfc07c7658930ca1fe631118de000a7a4ff344830f907d09de7b9117073",
     "package/Data/QuietDawnHUD/Scripts/QuietDawnPanelScale.lua": "295c319cccbfbd952c301e46c1675b1ca1c89377ed69d3564ca85eb856f35bf2",
-    "package/Data/QuietDawnHUD/Scripts/QuietDawnSprintPrompt.lua": "9d09e41936056853de469f681c0f3f120b118fdede8ab882543fe599601f4cae",
+    "package/Data/QuietDawnHUD/Scripts/QuietDawnSprintPrompt.lua": "6fadb34612163f7577fc61f1ed7f81b27202c9439e82da1630ebf4ae01e258c5",
     "package/Data/QuietDawnHUD/Scripts/QuietDawnTime.lua": "f6a8b9a8f40a60b396fbc554ec3e0f709e8e4031e5d9587257dff7819df31098",
     "package/Data/QuietDawnHUD/Scripts/QuietDawnTimers.lua": "59de331fad3d5bd29aa75b5ef757e2fcd373eea8c428dc39dc8f1663f88d3eb4",
     "package/Data/QuietDawnHUD/Scripts/SettingsModel.lua": "fae0560b7b84be883cd06eccc375156095eed90c55adbdee7db012e9d392d003",
@@ -34,18 +34,21 @@
     "package/Data/QuietDawnHUD/Scripts/UE4SSCommonSession.lua": "924272d0246d73759ba57a6ed5f0feea319065a96119d7c9ff7248dd345a09a2",
     "package/Data/QuietDawnHUD/Scripts/UE4SSCommonSettingsUpgrade.lua": "7e477c5ea119ad650564c803ab28bcab6802c063bb7c2e27b6c20336156d7b59",
     "package/Data/QuietDawnHUD/Scripts/UE4SSDawnwalkerSaveLoad.lua": "17e9cbb70326f536b14ba5512a46ac425e7e1446c90516e826b2092b30465707",
-    "package/Data/QuietDawnHUD/Scripts/UE4SSDawnwalkerSettings.lua": "039b09679eafec2b19cd8f27e3033dec26a52484a7529edbf14f15193ba07ef1"
+    "package/Data/QuietDawnHUD/Scripts/UE4SSDawnwalkerSettings.lua": "039b09679eafec2b19cd8f27e3033dec26a52484a7529edbf14f15193ba07ef1",
+    "package/Data/QuietDawnHUD/Scripts/QuietDawnSprintSource.lua": "6396524baf031641178ca5105f0a7658268263aa5de230382a9caef1b317ede5"
   },
   "nativeSources": {
-    "native/BUILD.md": "dfc3af6e82b23b779dfeda461e1f7d0d6cf7e2c3576e0e5f8bea54ab4e32677e",
-    "native/CMakeLists.txt": "bde00607055a6c021b48e6919ed61539a735b378924dff10b7b824f64695ab8b",
+    "native/BUILD.md": "8d13c35e26aa9b302a8e4e6f8ba1bb8d43588edde278ca9f813637d1a151c11a",
+    "native/CMakeLists.txt": "9865b5a6aed805b332a5b4ddecbfa10f6da12aa678a57fc9c274e9a1e43c524e",
     "native/EventQueue.hpp": "2f3698b0df7fe233552c348f4936eb5878395fdcac4c1ffe611b392878dbe4cb",
-    "native/Framecore2b.def": "b22cbcc0af10befdac3b9a7bd963fa51f2e1a0909e34cf21434f35ec8cfaacd1",
-    "native/main.cpp": "e2749cf6eb6c70a20b1de5765b351fa93eeda524df3cebc31a11607c0cb311e4",
-    "native/ObjectIdentity.hpp": "18b21a331f9bfb0e6ddd70e4ce68177d2d82dde2faff0839c03f3c37e038b0ad"
+    "native/Framecore2b.def": "05fd0304d12a7186397b52d6b0c11d1c7b7f023a5f5d2706ff22347c769b4b7f",
+    "native/main.cpp": "4a9897f7412d4b2af4cb616c910a127d9b2024e08a412b13e2850fceb37d3f67",
+    "native/ObjectIdentity.hpp": "18b21a331f9bfb0e6ddd70e4ce68177d2d82dde2faff0839c03f3c37e038b0ad",
+    "native/SprintPrompts.cpp": "341c1946a8985751098cfc028d8c58fcde71d1918ff6e4b8da8b127d83d7b658",
+    "native/SprintPrompts.hpp": "ad55e7eadadd85daf87464addcdfa5dd3fde64330c8dbc74517d906c66977de1"
   },
   "nativeDll": {
     "path": "package/Data/QuietDawnHUD/dlls/main.dll",
-    "sha256": "834bf7080cb3c7c5a30ca1a07dddd010edf5a9cc60f546402aa0a6909c4b8152"
+    "sha256": "baf8219607ad05d7514de1d717b06b2b4b24748972c8a3dc617ee5694bae8131"
   }
 }
