@@ -1,19 +1,26 @@
 # Changelog
 
-## Unreleased
+## 1.0
 
-- Suppress Sprint/Haste prompts before they are displayed in human and vampire form, and hide existing running prompts when the option is enabled.
-- Fix the time panel missing activity time advances, including shrine restoration, and preserve its reveal while the activity hides the HUD.
-
-- Organize menu categories into Player status, Combat, Exploration and Controls, alphabetically within each group, with General first and Diagnostics last.
-
-- Fix panel size changes getting stuck at partial opacity, including a compass set to 25% size and 40% opacity.
-
-- Add Hide claw slash marks, an On/Off setting for the red Shredded Touch hit effects and sword variant, enabled by default. Preserve damage, bleeding and ordinary blood effects.
-
-- Add independent size sliders for all 17 player HUD panels: 25% to 200% in 5% steps, default 100%, with screen-edge alignment.
-
+- Suppress Sprint/Haste prompts before they appear in human and vampire form, and hide existing running prompts when the option is enabled.
+- Show the time panel when activities advance time, including shrine restoration, and preserve the reveal while an activity hides the HUD.
+- Apply settings directly to active gameplay through Mod Setting Menu.
+- Add independent size sliders for all 17 player panels, from 25% to 200% in 5% steps, with screen-edge alignment.
+- Fix size changes getting stuck at partial opacity, including a compass set to 25% size and 40% opacity.
+- Add Hide claw slash marks for the red Shredded Touch effects and sword variant, enabled by default while preserving damage, bleeding and ordinary blood effects.
+- Organize settings into Player status, Combat, Exploration and Controls, keeping each panel's related controls together and Logging last.
 - Correct the health hold tooltip to show the 0.2% healing threshold.
+
+## 0.0.0
+
+- Configurable opacity for 17 HUD panels with contextual resource alerts, quickslot reveals, time reveals and manual HUD peek.
+- Hide enemy health bars, names, difficulty icons and running prompts; independently configure four combat cues and cue size.
+- Support Framecore 2b with the bundled native HUD bridge and optional Mod Setting Menu or manual settings.ini configuration.
+- Keep HUD visibility controls in one section and ignore minor blood fluctuations when refreshing health alerts.
+- Lower the health and blood regeneration reveal threshold from 1% to 0.2% of the bar, so smaller gains show the panel and refresh its health alert timer.
+- Add an independent Hide enemy health bars toggle to restore ordinary enemy and boss health bars, end caps and boss phase indicators while preserving separate name and difficulty-icon settings.
+
+## Earlier development
 
 - Add Hide enemy health bars, an independent setting to restore ordinary enemy and boss health bars, end caps and boss health-phase indicators. Names and difficulty icons retain their separate toggles.
 
@@ -109,7 +116,5 @@
 - Initial standalone event-driven HUD implementation.
 - Six optional persistent panels hidden while idle; combat, stance, lock-on, focus, and manual reveal support.
 - Bounded initialization and panel updates, with no permanent worker after setup.
-
-Pending development changes: add opt-in personal INI diagnostics with bounded event logging and phase summaries. Use explicitly chained one-shot callbacks so completed workers stop on the target UE4SS build; select the incoming job scope before deciding whether to sample stats.
 
 - Standardize the debug logging setting as `debugLogging`; retain existing configuration compatibility.
