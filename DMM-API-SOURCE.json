@@ -14,7 +14,7 @@
   },
   "runtimeSources": {
     "package/Data/QuietDawnHUD/Scripts/dmm_api.lua": "6bb667bffc543d1c5c1b36ab6da66c621d6c81c9ee46f94f0f6339cae9cc884c",
-    "package/Data/QuietDawnHUD/Scripts/Gameplay.lua": "14de8334436c503486ec908066378ffef7aa56db86b1402e827d58627635a737",
+    "package/Data/QuietDawnHUD/Scripts/Gameplay.lua": "b7b7e4a19bff39d5ce6ed77a8c9c3395bf1f276fbc3f61cef1699e0daad8902e",
     "package/Data/QuietDawnHUD/Scripts/LiveSettings.lua": "448091521b08451298bbeec2c2e9ef175e9528af4d449cf1e5a04aa96ce3aa31",
     "package/Data/QuietDawnHUD/Scripts/main.lua": "e28c50a36ada47dbb21a2fe1aa2a4cd478fdc77fd490bae8019b253b0b1a04fd",
     "package/Data/QuietDawnHUD/Scripts/MenuSettings.lua": "944cc45747f5f8ca5b562b5830c29df7593307349609c6907a4db89bb2d15451",
@@ -41,11 +41,11 @@
     "native/CMakeLists.txt": "bde00607055a6c021b48e6919ed61539a735b378924dff10b7b824f64695ab8b",
     "native/EventQueue.hpp": "2f3698b0df7fe233552c348f4936eb5878395fdcac4c1ffe611b392878dbe4cb",
     "native/Framecore2b.def": "b22cbcc0af10befdac3b9a7bd963fa51f2e1a0909e34cf21434f35ec8cfaacd1",
-    "native/main.cpp": "9d40139ab47feb750f5b73c02eab877ba3655ba7adccb335b2a9019c9fc6ed2c",
+    "native/main.cpp": "e2749cf6eb6c70a20b1de5765b351fa93eeda524df3cebc31a11607c0cb311e4",
     "native/ObjectIdentity.hpp": "18b21a331f9bfb0e6ddd70e4ce68177d2d82dde2faff0839c03f3c37e038b0ad"
   },
   "nativeDll": {
     "path": "package/Data/QuietDawnHUD/dlls/main.dll",
-    "sha256": "4ba8674793fb1c44e8d8395cbe66b959b22ddb8961364a71eebfea7460801c92"
+    "sha256": "834bf7080cb3c7c5a30ca1a07dddd010edf5a9cc60f546402aa0a6909c4b8152"
   }
 }

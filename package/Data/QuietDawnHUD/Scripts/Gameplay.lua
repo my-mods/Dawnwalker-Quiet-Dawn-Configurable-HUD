@@ -526,15 +526,29 @@ healthStep=D.wrap("enemyHealth",healthStep)
 local healthTurn=false
 local sprintPrompts=config.hideSprintPrompt and require("QuietDawnSprintPrompt").new({
     StaticFindObject=StaticFindObject,opacity=opacity,D=D}) or nil
+local PROMPT_WIDGET="/Game/_Dawnwalker/UI/_Unified/Gameplay/InputPrompt/WBP_InputPrompt.WBP_InputPrompt_C"
+local PROMPT_REFRESH=PROMPT_WIDGET..":UpdateWidget"
 local promptTurn=false
 local function promptsReady()
-    return sprintPrompts and hooks[ROOT..":OnSetInputPromptEnabled"]
+    return sprintPrompts and (hooks[ROOT..":OnSetInputPromptEnabled"] or hooks[PROMPT_REFRESH])
         and candidate==nil and valid(hud) and sprintPrompts.pending(hud)
 end
 local function promptEvent(context)
     local object=unwrap(context)
     if config.hideSprintPrompt and sprintPrompts and sameObject(object,hud) then
+        if D.debugLogging then D.count("sprintPromptEvents") end
         sprintPrompts.queue(object)
+        wake("sprintPrompt")
+    end
+end
+local function promptRefreshed(context)
+    if not config.hideSprintPrompt or not sprintPrompts or not valid(hud) then return end
+    local object=unwrap(context)
+    -- Native HUD dispatch can bypass its event wrapper. Observe the stock
+    -- child refresh after it has assigned the text; accept only our two slots.
+    if sameObject(object,hud.WBP_InputPrompt) or sameObject(object,hud.WBP_SecondInputPrompt) then
+        if D.debugLogging then D.count("sprintPromptRefreshEvents") end
+        sprintPrompts.queue(hud)
         wake("sprintPrompt")
     end
 end
@@ -621,6 +635,7 @@ if manualPeekEnabled then
 end
 if sprintPrompts then
     specs[#specs+1]={path=ROOT..":OnSetInputPromptEnabled", callback=promptEvent, optional="prompt"}
+    specs[#specs+1]={path=PROMPT_REFRESH, callback=promptRefreshed, optional="prompt"}
 end
 if timeRevealEnabled then
     specs[#specs+1]={path=TIME..":ExecuteUbergraph_WBP_HudTimer", callback=timeChanged, optional="time"}
@@ -669,7 +684,7 @@ local function registerOne()
             elseif spec.optional=="panel" then
                 print("[Quiet Dawn - Configurable HUD] Panel event unavailable; other HUD controls remain active: "..spec.path)
             elseif spec.optional=="prompt" then
-                if D.debugLogging then D.event("sprintPrompt","prompt hook unavailable; prompts left to the game") end
+                if D.debugLogging then D.event("sprintPrompt","prompt hook unavailable: %s",spec.path) end
             elseif spec.optional=="peek" then
                 print("[Quiet Dawn - Configurable HUD] Manual peek input unavailable; automatic health alerts remain enabled.")
             else
@@ -1231,6 +1246,14 @@ if not subscribed then
     print("[Quiet Dawn - Configurable HUD] HUD lifecycle notification unavailable; disabled.")
     return
 end
+pcall(NotifyOnNewObject,PROMPT_WIDGET,function()
+    -- Construction only wakes the existing finite worker/rebind window.
+    -- It is not safe to inspect a newly constructed widget here.
+    if config.hideSprintPrompt and sprintPrompts and hudAddress then
+        candidate=candidate or hud
+        wake()
+    end
+end)
 if seen.WBP_HudTimer then
     local timeSubscribed=pcall(NotifyOnNewObject,TIME,function()
         -- Construction only wakes finite readiness/rebinding; it is not time passing.

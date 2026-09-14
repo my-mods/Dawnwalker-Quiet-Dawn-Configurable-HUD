@@ -66,7 +66,10 @@ constexpr std::array specs{
     Spec{MARKER L"Display Icon State Directionally"},
     Spec{MARKER L"Display Icon State Non-Directionally"},
     // Direct time-display calls can bypass the graph-entry wrapper.
-    Spec{L"/Game/_Dawnwalker/UI/_Unified/HUD/Timer/WBP_HudTimer.WBP_HudTimer_C:Update Time Display"}
+    Spec{L"/Game/_Dawnwalker/UI/_Unified/HUD/Timer/WBP_HudTimer.WBP_HudTimer_C:Update Time Display"},
+    // Both running forms refresh these child widgets even when native HUD
+    // dispatch bypasses OnSetInputPromptEnabled. Capture context only.
+    Spec{L"/Game/_Dawnwalker/UI/_Unified/Gameplay/InputPrompt/WBP_InputPrompt.WBP_InputPrompt_C:UpdateWidget"}
 };
 struct Scalar { int offset{}, bytes{}; };
 struct Binding { UFunction* node{}; QuietDawn::ObjectIdentity identity; std::array<Scalar,2> params{}; };

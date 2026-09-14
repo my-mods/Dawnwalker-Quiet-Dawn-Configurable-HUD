@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Fix Sprint/Haste prompts staying visible after prompt updates in human and vampire form.
 - Fix the time panel missing activity time advances, including shrine restoration, and preserve its reveal while the activity hides the HUD.
 
 - Organize menu categories into Player status, Combat, Exploration and Controls, alphabetically within each group, with General first and Diagnostics last.
