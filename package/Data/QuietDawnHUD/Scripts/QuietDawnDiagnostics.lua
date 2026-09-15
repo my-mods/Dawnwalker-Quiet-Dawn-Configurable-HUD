@@ -6,7 +6,7 @@ local function output(message) print("[Quiet Dawn - Configurable HUD][DEBUG] "..
 local function summary(s)
     local timings,counts,dropped=s.timings,s.counts,s.dropped
     local parts={string.format("summary interval=%.3fs suppressed=%d sampleGapMaxMs=%.3f",s.interval,dropped,gapMax or 0)}
-    for _,name in ipairs({"worker","sample","marker","enemyHealth","directions","hook"}) do
+    for _,name in ipairs({"worker","sample","marker","enemyHealth","directions","hook","clawMarks"}) do
         local t=timings[name]
         if t then parts[#parts+1]=string.format("%s calls=%d avgMs=%.3f maxMs=%.3f slow=%d",name,t.n,t.total/t.n,t.max,t.slow) end
     end

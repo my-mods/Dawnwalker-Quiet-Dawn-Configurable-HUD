@@ -8,6 +8,24 @@ function M.new(config, diagnostics, session)
         [5]="RightArrow",[6]="LeftArrow",[7]="TopArrow",[8]="BottomArrow"}
     local counter={[10]="LeftArrow",[11]="RightArrow",[12]="BottomArrow",[13]="TopArrow"}
     local function valid(o) return o~=nil and o:IsValid() end
+    local function method(o,name)
+        local ok,fn=pcall(function()
+            if not valid(o) then return end
+            local value=o[name]
+            if type(value)=='function' then return value end
+            if type(value)=='userdata' and value:type()=='UFunction' and value:IsValid() then return value end
+        end)
+        return ok and fn or nil
+    end
+    local function cleanup(entry,callback)
+        session.onClose(function()
+            local ok,err=pcall(callback)
+            if not ok and diagnostics.debugLogging and not entry.cueCleanupWarned then
+                entry.cueCleanupWarned=true
+                diagnostics.event('combatCueCleanup','expired or unavailable marker: %s',tostring(err))
+            end
+        end)
+    end
     local function identity(o)
         local class=o:GetClass()
         local classAddress,name=class:GetAddress(),o:GetFullName()
@@ -29,8 +47,10 @@ function M.new(config, diagnostics, session)
             local same=identity(o)
             saved={address=address,original=current}
             entry.cueVisibility[name]=saved
-            session.onClose(function()
-                if same() and o:GetVisibility()==saved.last then o:SetVisibility(saved.original) end
+            cleanup(entry,function()
+                if not same() then return end
+                local get,set=method(o,'GetVisibility'),method(o,'SetVisibility')
+                if get and set and get(o)==saved.last then set(o,saved.original) end
             end)
         end
         if current~=saved.last then saved.original=current end
@@ -55,8 +75,28 @@ function M.new(config, diagnostics, session)
             else
                 session.change(key,function()
                     if not saved.same() then return nil,false end
+                    if session.active==false then
+                        if saved.restoreUnavailable or not method(o,'SetRenderScale') then return nil,false end
+                        local ok,value=pcall(function() return o.RenderTransform.Scale[axis] end)
+                        if not ok or type(value)~='number' then return nil,false end
+                        return value
+                    end
                     return o.RenderTransform.Scale[axis]
                 end,function(value)
+                    if session.active==false then
+                        local ok,err=pcall(function()
+                            assert(saved.same(),'Combat cue scale owner changed')
+                            local x,y=o.RenderTransform.Scale.X,o.RenderTransform.Scale.Y
+                            o:SetRenderScale({X=axis=='X' and value or x,Y=axis=='Y' and value or y})
+                            local actual=o.RenderTransform.Scale[axis]
+                            assert(type(actual)=='number' and math.abs(actual-value)<=1e-5*math.max(1,math.abs(value)),'Combat cue scale restore failed')
+                        end)
+                        if not ok then
+                            saved.restoreUnavailable=true
+                            if diagnostics.debugLogging then diagnostics.event('combatCueCleanup','scale restore unavailable: %s',tostring(err)) end
+                        end
+                        return true
+                    end
                     assert(saved.same(),'Combat cue scale owner changed')
                     local x,y=o.RenderTransform.Scale.X,o.RenderTransform.Scale.Y
                     o:SetRenderScale({X=axis=='X' and value or x,Y=axis=='Y' and value or y})
@@ -77,7 +117,7 @@ function M.new(config, diagnostics, session)
         entry.cueVisibility=entry.cueVisibility or {}
         if not entry.cueCleanup then
             local same=identity(object)
-            session.onClose(function()
+            cleanup(entry,function()
                 if not same() then return end
                 -- Session hooks are detached before cleanup. Restore the game's
                 -- current brush/color after our scalar visibility/scale journal.
@@ -85,8 +125,8 @@ function M.new(config, diagnostics, session)
                 if not icon or icon<0 or icon>13 or icon%1~=0 then return end
                 local name=object['Hide Directions']==true and 'Display Icon State Non-Directionally'
                     or 'Display Icon State Directionally'
-                local fn=object[name]
-                if type(fn)=='function' or (type(fn)=='userdata' and fn:IsValid()) then fn(object,icon) end
+                local fn=method(object,name)
+                if fn then fn(object,icon) end
             end)
             entry.cueCleanup=true
         end

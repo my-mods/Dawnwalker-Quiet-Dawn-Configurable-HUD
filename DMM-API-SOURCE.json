@@ -18,10 +18,10 @@
     "package/Data/QuietDawnHUD/Scripts/LiveSettings.lua": "448091521b08451298bbeec2c2e9ef175e9528af4d449cf1e5a04aa96ce3aa31",
     "package/Data/QuietDawnHUD/Scripts/main.lua": "e28c50a36ada47dbb21a2fe1aa2a4cd478fdc77fd490bae8019b253b0b1a04fd",
     "package/Data/QuietDawnHUD/Scripts/MenuSettings.lua": "944cc45747f5f8ca5b562b5830c29df7593307349609c6907a4db89bb2d15451",
-    "package/Data/QuietDawnHUD/Scripts/QuietDawnClawMarks.lua": "6fe554d5fb30eee1639248df0bd0008ceafcc997322014a129b80e06f18e87ea",
-    "package/Data/QuietDawnHUD/Scripts/QuietDawnCombatCues.lua": "6cc98db21803793bc376d7437e161152dafd481b344e6a59c0c5d15c84d1d012",
+    "package/Data/QuietDawnHUD/Scripts/QuietDawnClawMarks.lua": "b45dee7d8ce43732329e2c72bd5f0010f403ba4f9aae1baae4ee2845c170a128",
+    "package/Data/QuietDawnHUD/Scripts/QuietDawnCombatCues.lua": "804e10ab948bfe592d80a0e70c3a5bca81e3244771162e307b80ae11d90002d7",
     "package/Data/QuietDawnHUD/Scripts/QuietDawnDefaults.lua": "024918841ebb7967f831e8789a7616e4c1fb09cfb494356bdbf6fcc97d2ab494",
-    "package/Data/QuietDawnHUD/Scripts/QuietDawnDiagnostics.lua": "3ba6e80a7141faf9ca023e3f04ccd34e1d3b5e1962c2b512c8422749c84d5898",
+    "package/Data/QuietDawnHUD/Scripts/QuietDawnDiagnostics.lua": "b3069592e0ccb6d0defb59e6fe829b2914857c7301f39779a842bf7f8c67ac1a",
     "package/Data/QuietDawnHUD/Scripts/QuietDawnNative.lua": "a3afdcfc07c7658930ca1fe631118de000a7a4ff344830f907d09de7b9117073",
     "package/Data/QuietDawnHUD/Scripts/QuietDawnPanelScale.lua": "295c319cccbfbd952c301e46c1675b1ca1c89377ed69d3564ca85eb856f35bf2",
     "package/Data/QuietDawnHUD/Scripts/QuietDawnSprintPrompt.lua": "6fadb34612163f7577fc61f1ed7f81b27202c9439e82da1630ebf4ae01e258c5",
@@ -38,17 +38,19 @@
     "package/Data/QuietDawnHUD/Scripts/QuietDawnSprintSource.lua": "6396524baf031641178ca5105f0a7658268263aa5de230382a9caef1b317ede5"
   },
   "nativeSources": {
-    "native/BUILD.md": "8d13c35e26aa9b302a8e4e6f8ba1bb8d43588edde278ca9f813637d1a151c11a",
-    "native/CMakeLists.txt": "9865b5a6aed805b332a5b4ddecbfa10f6da12aa678a57fc9c274e9a1e43c524e",
+    "native/BUILD.md": "b5300ea5939d257898c33354619afea7b24090a3fdfd2f91496bb9da34377db5",
+    "native/CMakeLists.txt": "432644c88bc801b813ff2cab2074ce04860e7e11e4fadc83eccb66c62bb151c3",
     "native/EventQueue.hpp": "2f3698b0df7fe233552c348f4936eb5878395fdcac4c1ffe611b392878dbe4cb",
-    "native/Framecore2b.def": "05fd0304d12a7186397b52d6b0c11d1c7b7f023a5f5d2706ff22347c769b4b7f",
-    "native/main.cpp": "4a9897f7412d4b2af4cb616c910a127d9b2024e08a412b13e2850fceb37d3f67",
+    "native/Framecore2b.def": "2026baaedb80d6809e460a20a67dc9be7aec50ad0d7d0d6e8808789d64b81863",
+    "native/main.cpp": "050a35c7cf9394c4c33f78353f8e14475340110c3eba810502a0d2f21207efee",
     "native/ObjectIdentity.hpp": "18b21a331f9bfb0e6ddd70e4ce68177d2d82dde2faff0839c03f3c37e038b0ad",
     "native/SprintPrompts.cpp": "341c1946a8985751098cfc028d8c58fcde71d1918ff6e4b8da8b127d83d7b658",
-    "native/SprintPrompts.hpp": "ad55e7eadadd85daf87464addcdfa5dd3fde64330c8dbc74517d906c66977de1"
+    "native/SprintPrompts.hpp": "ad55e7eadadd85daf87464addcdfa5dd3fde64330c8dbc74517d906c66977de1",
+    "native/ClawAssets.cpp": "65cd254d5ff67338b91ef0f5b7966d868bd722f6db98bf1bb7b8325078605cf5",
+    "native/ClawAssets.hpp": "2af082cea1ca16df0a112ae15e3bcc2995669500393564eebfe64406cd09ea63"
   },
   "nativeDll": {
     "path": "package/Data/QuietDawnHUD/dlls/main.dll",
-    "sha256": "baf8219607ad05d7514de1d717b06b2b4b24748972c8a3dc617ee5694bae8131"
+    "sha256": "51305b21cc69e8261564425c0c781f17682f3c0ea26845ba4548ff87f9784527"
   }
 }

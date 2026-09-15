@@ -97,3 +97,6 @@ EXPORTS
 ?UnregisterHook@UObjectGlobals@Unreal@RC@@YAXPEAVUFunction@23@U?$pair@HH@std@@@Z
 ?get_default_devices_ref@DefaultTargets@Output@RC@@SAAEAV?$vector@V?$unique_ptr@VOutputDevice@Output@RC@@U?$default_delete@VOutputDevice@Output@RC@@@std@@@std@@V?$allocator@V?$unique_ptr@VOutputDevice@Output@RC@@U?$default_delete@VOutputDevice@Output@RC@@@std@@@std@@@2@@std@@XZ
 ?get_integer@Lua@LuaMadeSimple@RC@@QEBA_JH@Z
+?IsRootSet@FUObjectItem@Unreal@RC@@QEAA_NXZ
+?SetRootSet@FUObjectItem@Unreal@RC@@QEAAXXZ
+?UnsetRootSet@FUObjectItem@Unreal@RC@@QEAAXXZ

@@ -86,6 +86,8 @@ See [SETTINGS.md](SETTINGS.md) for every key, default, supported value, first-us
 
 Framecore 2b uses a native filter for Quiet Dawn's HUD events. It copies event values into a bounded queue and delivers them through the existing game-thread scheduler. Player alerts take priority over enemy-widget bursts; saved changes update the active session. The helper adds no polling thread or continuous readiness timer.
 
+Claw-mark suppression prepares the two slash effects when enabled. On Framecore 2b, it keeps their original assets available until the option is turned off or the save session closes. Missing or expired enemy widgets are skipped during reload cleanup so the new HUD can receive its settings. Logging includes slash preparation counts and timings.
+
 Player creation and possession can activate the HUD when a loading-screen notification is missed. Readiness checks share one finite window of less than ten seconds; they stop after success or exhaustion and can resume on a later player event. An old world's player cannot activate a new session. Ordinary travel retains the settings snapshot.
 
 Enable **Logging** (the final menu entry), or set `debugLogging = 1` in `settings.ini`, for activation and HUD diagnostics in `Dawnwalker/Binaries/Win64/ue4ss/UE4SS.log`. Apply to update diagnostics immediately; restart the game to diagnose an activation failure that prevents the new snapshot from loading. Activation summaries include the event source, readiness attempts, failure reason and aggregate CPU time. Logging is off by default. Hook-registration failures include the exact function path and exception once per hook per session.

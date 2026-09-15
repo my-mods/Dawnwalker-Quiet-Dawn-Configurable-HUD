@@ -20,6 +20,7 @@
 #include <cstring>
 #include "EventQueue.hpp"
 #include "SprintPrompts.hpp"
+#include "ClawAssets.hpp"
 
 // Public exported declaration in LuaType/LuaUObject.hpp. Keep its heavy
 // template implementation out of this translation unit; conversion belongs
@@ -272,6 +273,7 @@ public:
         // Full-feature loader/profile: leave RegisterHook with its usual owner.
         if (!supportedRuntime()) return;
         QuietDawn::SprintPrompts::registerLua(lua);
+        QuietDawn::ClawAssets::registerLua(lua);
         if (UnrealInitializer::StaticStorage::GlobalConfig.bHookProcessLocalScriptFunction) return;
         auto s=state; current=s;
         s->mod=get_mod_ref(lua);
@@ -358,6 +360,7 @@ public:
     }
     ~QuietDawnMod() override {
         QuietDawn::SprintPrompts::shutdown();
+        QuietDawn::ClawAssets::shutdown();
         state->active=false;
         if(state->hook!=Hook::ERROR_ID) Hook::UnregisterCallback(state->hook);
         state->detach();
