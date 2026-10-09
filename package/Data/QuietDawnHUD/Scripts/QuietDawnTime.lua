@@ -34,11 +34,22 @@ function M.new(D)
         attempts,warned=0,false
     end
     function api.queue(isConfirmed)
+        -- A later event starts a fresh finite readiness window. Coalesced
+        -- events must not continually replenish an already pending retry.
+        if not requested then
+            attempts=0
+            if not valid(system) then lookupTried=false end
+        end
         requested=true
         confirmed=confirmed or isConfirmed==true
     end
     function api.pending() return requested end
-    function api.resume() if waiting or day==nil then requested=true end end
+    function api.resume()
+        -- Activities can advance time without a delivered widget update.
+        -- Compare the retained baseline on preset/activation events too.
+        -- Unchanged clocks remain quiet; this never starts idle polling.
+        api.queue(false)
+    end
     function api.cancel()
         api.reset()
         requested=false

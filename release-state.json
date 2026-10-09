@@ -54,10 +54,10 @@
         "VortexExtension"
       ],
       "pending": {
-        "impact": "none",
-        "rationale": "Matches the verified Nexus release.",
+        "impact": "patch",
+        "rationale": "Complete delta from Nexus 1.2.1: fix activity-return clock sampling, bounded readiness recovery and live timebar enablement; update player notes and versioned payload/provenance. No schema change.",
         "majorOverride": false,
-        "reviewedInputs": "51fc169c625b335f5123f3832872a64ec107231b4b491e3c835ffdb9663b8b5d",
+        "reviewedInputs": "c709a6d675bcb557a6de47469ddc9b1d849f6131f815bde4f223157c4e41fcfa",
         "divergenceReviewed": false
       },
       "publication": {

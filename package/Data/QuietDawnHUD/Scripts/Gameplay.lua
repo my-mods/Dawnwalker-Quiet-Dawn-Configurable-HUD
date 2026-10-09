@@ -1025,7 +1025,8 @@ if sprintPrompts then
     specs[#specs+1]={path=ROOT..":OnSetInputPromptEnabled", callback=promptEvent, optional="prompt"}
     specs[#specs+1]={path=PROMPT_REFRESH, callback=promptRefreshed, optional="prompt"}
 end
-if timeRevealEnabled then
+-- Keep observers available when a live setting later enables timed reveals.
+if seen.WBP_HudTimer then
     specs[#specs+1]={path=TIME..":ExecuteUbergraph_WBP_HudTimer", callback=timeChanged, optional="time"}
     specs[#specs+1]={path=TIME..":Update Time Display", callback=timeDisplayUpdated, optional="time"}
 end
