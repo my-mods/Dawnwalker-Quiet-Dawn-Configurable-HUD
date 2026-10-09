@@ -1,7 +1,7 @@
-## 1.2.2-dev
+## 1.2.2
 
-- Restore the timebar reveal after activities advance time and the HUD returns.
-- Restore timebar reveals after temporarily unavailable time data or enabling them during play.
+- Restore the timebar after activities advance time, including shrine restoration.
+- Enabling timebar reveals during play now takes effect without reloading.
 
 ## 1.2.1
 

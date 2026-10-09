@@ -255,7 +255,7 @@ int bind(State& state, std::string_view path) {
 class QuietDawnMod final: public CppUserModBase {
     std::shared_ptr<State> state=std::make_shared<State>();
 public:
-    QuietDawnMod() { ModName=STR("Quiet Dawn native HUD bridge"); ModVersion=STR("1.2.2-dev"); ModAuthors=STR("oOCamilleOo_"); }
+    QuietDawnMod() { ModName=STR("Quiet Dawn native HUD bridge"); ModVersion=STR("1.2.2"); ModAuthors=STR("oOCamilleOo_"); }
     void on_lua_start(StringViewType name,Lua& lua,Lua& main,Lua& async,Lua* hook) override {
         if (name!=STR("QuietDawnHUD")) return;
         QuietDawn::SprintPrompts::registerLua(lua);

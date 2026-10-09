@@ -55,9 +55,9 @@
       ],
       "pending": {
         "impact": "patch",
-        "rationale": "Complete delta from Nexus 1.2.1: fix activity-return clock sampling, bounded readiness recovery and live timebar enablement; update player notes and versioned payload/provenance. No schema change.",
+        "rationale": "Release 1.2.2: timebar activity-return, readiness and live enablement fixes from Nexus 1.2.1; matching metadata/native version only; no schema change.",
         "majorOverride": false,
-        "reviewedInputs": "c709a6d675bcb557a6de47469ddc9b1d849f6131f815bde4f223157c4e41fcfa",
+        "reviewedInputs": "46780cfda66c6134519b8eaff75e2d892379a3dfccdaabb274ab38a8ef28fdfb",
         "divergenceReviewed": false
       },
       "publication": {
