@@ -55,9 +55,9 @@
       ],
       "pending": {
         "impact": "patch",
-        "rationale": "Release 1.2.2: timebar activity-return, readiness and live enablement fixes from Nexus 1.2.1; matching metadata/native version only; no schema change.",
+        "rationale": "Timebar fixes from Nexus 1.2.1; release changelog reduced to the user-approved activity reveal bullet.",
         "majorOverride": false,
-        "reviewedInputs": "46780cfda66c6134519b8eaff75e2d892379a3dfccdaabb274ab38a8ef28fdfb",
+        "reviewedInputs": "d26888aa0fb5ff4b057506ce281396c416d64ff94edc3479245aa9c8a341fb09",
         "divergenceReviewed": false
       },
       "publication": {
