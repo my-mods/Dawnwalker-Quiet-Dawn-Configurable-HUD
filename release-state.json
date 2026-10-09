@@ -54,10 +54,10 @@
         "VortexExtension"
       ],
       "pending": {
-        "impact": "none",
-        "rationale": "Matches the verified Nexus release.",
+        "impact": "patch",
+        "rationale": "Complete delta from Nexus 1.2.2: menu wording and Nexus link; release notes and native version metadata only, with unchanged runtime logic and schema.",
         "majorOverride": false,
-        "reviewedInputs": "d26888aa0fb5ff4b057506ce281396c416d64ff94edc3479245aa9c8a341fb09",
+        "reviewedInputs": "4beaa4d39a5985a2602fac4323e653603e5ae75b7c878c9233ab20e8adeed98b",
         "divergenceReviewed": false
       },
       "publication": {

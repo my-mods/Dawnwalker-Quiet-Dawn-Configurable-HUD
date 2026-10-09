@@ -6,7 +6,7 @@
     <modid>QuietDawnHUD</modid>
     <description>Quiet, configurable HUD with Vanilla, Quiet Dawn, Fixed Opacity and Always Hidden modes for 17 player panels. Show HUD through Controls Legend hold or Focus mode, with individual panel inclusion choices. Enemy health bars, names, difficulty icons and combat cues remain separately configurable.</description>
     <author>my-mods</author>
-    <version>1.2.2</version>
+    <version>1.2.3</version>
     <created_on>2026-09-06</created_on>
   </info>
   <supports><game>The Blood of Dawnwalker</game><steam_build>25232147</steam_build><loader>Dawnwalker-compatible UE4SS with delayed game-thread callbacks</loader></supports>
