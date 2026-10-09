@@ -55,9 +55,9 @@
       ],
       "pending": {
         "impact": "patch",
-        "rationale": "Complete delta from Nexus 1.2.2: menu wording and Nexus link; release notes and native version metadata only, with unchanged runtime logic and schema.",
+        "rationale": "Menu wording and Nexus link from 1.2.2; changelog limited to user-approved Show/Hide wording bullet; no runtime logic or schema changes.",
         "majorOverride": false,
-        "reviewedInputs": "4beaa4d39a5985a2602fac4323e653603e5ae75b7c878c9233ab20e8adeed98b",
+        "reviewedInputs": "1ec5853cae96aa0837471b5ba1e9c0b52bf032be7c4b95ddedc82c24043b99ed",
         "divergenceReviewed": false
       },
       "publication": {
