@@ -1,3 +1,7 @@
+## 1.2.4-dev
+
+- Fix enemy health bars staying visible when entering combat quickly.
+
 ## 1.2.3
 
 - Clarify the Shredded Touch and vampire claw hit mark options with consistent Show/Hide labels.

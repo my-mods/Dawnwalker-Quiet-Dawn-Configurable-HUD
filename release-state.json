@@ -54,10 +54,10 @@
         "VortexExtension"
       ],
       "pending": {
-        "impact": "none",
-        "rationale": "Matches the verified Nexus release.",
+        "impact": "patch",
+        "rationale": "Fix late enemy-bar construction recovery and coalesced lifecycle work; allow enemy suppression during player HUD fades and ordinary marker traffic. Includes player release notes, synchronized 1.2.4-dev metadata and rebuilt version declaration; no settings or interface changes.",
         "majorOverride": false,
-        "reviewedInputs": "1ec5853cae96aa0837471b5ba1e9c0b52bf032be7c4b95ddedc82c24043b99ed",
+        "reviewedInputs": "62dc3e1b1a2285ab4a57bf7860b16370c47a05e73fe92bbe8afa89c0e690d0b6",
         "divergenceReviewed": false
       },
       "publication": {

@@ -83,8 +83,8 @@ function M.new(context)
     end
 
     local specs = {
-        {path=CHARACTER_BAR, className="WBP_CombatCharacterBar_C", fields=fieldsFor(1), events={"Construct","UpdateTarget"}, unavailable={}, constructed={}},
-        {path=BOSS_BAR, className="WBP_Combat_BossBar_C", fields=fieldsFor(2), events={"Update Owner"}, unavailable={}, constructed={}},
+        {path=CHARACTER_BAR, className="WBP_CombatCharacterBar_C", fields=fieldsFor(1), events={"Construct","UpdateTarget"}, unavailable={}},
+        {path=BOSS_BAR, className="WBP_Combat_BossBar_C", fields=fieldsFor(2), events={"Update Owner"}, unavailable={}},
     }
 
     local queue, queued, first, last = {}, {}, 1, 0
@@ -95,8 +95,8 @@ function M.new(context)
     -- widget stays alive, so eight bounded readiness reads per event were
     -- still unbounded work in practice. State 1 preserves one later owner
     -- update as a genuine late-construction rearm; state 2 is dormant until a
-    -- new widget is constructed. The cache is per object, never global: a
-    -- replacement bar always receives its own normal readiness window.
+    -- widget completes construction again. The cache is per object, never
+    -- global: a replacement bar receives its own normal readiness window.
     local function combineSource(previous, incoming)
         if previous=="construction" or incoming=="construction" then return "construction" end
         if previous=="ownerUpdate" or incoming=="ownerUpdate" then return "ownerUpdate" end
@@ -106,14 +106,9 @@ function M.new(context)
     local function prepareFields(job)
         local object,spec=job.object,job.spec
         if job.source=="construction" then
-            -- NotifyOnNewObject and the Blueprint Construct hook can both
-            -- describe the same construction. They are one generation, not
-            -- two chances to reopen a known-missing field.
-            if spec.constructed[object] then
-                job.fields,job.field,job.attempts,job.prepared={},1,0,true
-                return
-            end
-            spec.constructed[object]=true
+            -- Allocation notification can precede the widget tree. Only the
+            -- Blueprint Construct event establishes a new readiness boundary,
+            -- including reconstruction of a pooled widget with the same owner.
             spec.unavailable[object]=nil
         end
         local unavailable=spec.unavailable[object]
@@ -227,7 +222,7 @@ function M.new(context)
             if #spec.recent>=MAX_RECENT_OBJECTS then
                 local evicted=table.remove(spec.recent,1)
                 spec.recentSet[evicted]=nil
-                spec.unavailable[evicted],spec.constructed[evicted]=nil,nil
+                spec.unavailable[evicted]=nil
             end
             spec.recent[#spec.recent+1]=object
             spec.recentSet[object]=true
@@ -295,18 +290,23 @@ function M.new(context)
             return false
         end
 
-        local function nextField()
-            job.field = job.field+1
-            job.attempts = 0
-            if job.field<=#job.fields then return true end
+        local function nextPass()
             if job.again then
                 job.fields = job.nextFields or spec.fields
                 job.source=job.nextSource or "direct"
                 job.nextFields,job.nextSource,job.again=nil,nil,false
+                job.field,job.attempts=1,0
                 job.prepared=false
                 return #job.fields>0
             end
             return false
+        end
+
+        local function nextField()
+            job.field = job.field+1
+            job.attempts = 0
+            if job.field<=#job.fields then return true end
+            return nextPass()
         end
 
         -- Register this spec's lifecycle hooks before touching any child.
@@ -359,14 +359,14 @@ function M.new(context)
             if registerNextEvent() then keep=true; return end
 
             local objectWorld,player = object:GetWorld(), object:GetOwningPlayer()
-            if not valid(objectWorld) or not valid(player) then keep=retry(); return end
+            if not valid(objectWorld) or not valid(player) then keep=retry() or nextPass(); return end
             local world,controller = context.world(), context.controller()
             if not sameObject(objectWorld,world) or not sameObject(player,controller)
                 or not sameObject(controller:GetWorld(),world) then return end
 
             if not job.prepared then
                 prepareFields(job)
-                if #job.fields==0 then return end
+                if #job.fields==0 then keep=nextPass(); return end
             end
             local field = job.fields[job.field]
             childStarted=true
@@ -402,9 +402,9 @@ function M.new(context)
         end)
 
         if not success then
-            -- Owner failures retire this job. A child failure exhausts only
-            -- that field, so independent health/name/effect controls progress.
-            keep = retry() or (childStarted and nextField())
+            -- Exhaust this operation without discarding a queued lifecycle
+            -- boundary. A child failure cannot block independent fields.
+            keep = retry() or (childStarted and nextField() or nextPass())
             -- Report each distinct cause once, with the object that
             -- triggered it. The identity is what makes this actionable: the
             -- message alone does not say which widget could not be read.
@@ -445,7 +445,7 @@ function M.new(context)
                 if spec.failedEvent then
                     spec.eventIndex, spec.failedEvent, spec.hookAttempts = spec.failedEvent, nil, 0
                 end
-                api.queue(object, spec, nil, "construction")
+                api.queue(object, spec, nil, "allocation")
             end)
             if not ok then D.logWarning("Enemy health notification unavailable: %s", spec.path) end
         end

@@ -1,3 +1,3 @@
-# Quiet Dawn - Configurable HUD 1.2.3
+# Quiet Dawn - Configurable HUD 1.2.4-dev
 
-- Clarify the Shredded Touch and vampire claw hit mark options with consistent Show/Hide labels.
+- Fix enemy health bars staying visible when entering combat quickly.

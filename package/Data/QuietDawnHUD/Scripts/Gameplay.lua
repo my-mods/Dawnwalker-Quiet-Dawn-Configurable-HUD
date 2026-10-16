@@ -1788,7 +1788,7 @@ local function step()
     -- time sampling and enemy bars, so it cannot sit visibly stale for many
     -- unrelated jobs. Alternation still gives every other subsystem a turn.
     markerTurn=not markerTurn
-    if markersReady() and (markerUrgent or markerTurn or (cursor==0 and not dirty)) then
+    if markersReady() and (markerUrgent or markerTurn or (cursor==0 and not dirty and not enemyBars.ready())) then
         -- A verified lock toggle is a presentation boundary: service it on
         -- the next rendered worker frame, without making ordinary cue traffic
         -- outrank every other subsystem.
@@ -1847,13 +1847,11 @@ local function step()
         return false
     end
     -- Alternate with existing work: one health child operation per frame,
-    -- sharing the same one-shot worker and its native frame gate. A failed
-    -- enemy field may still have its bounded readiness work queued; never let
-    -- that background work take an intermediate frame away from an active
-    -- player-HUD fade. The fade pass below advances it in this same worker
-    -- call, so this changes priority rather than adding another tick.
+    -- sharing the same one-shot worker and its native frame gate. Fades have
+    -- already advanced at the top of this call; they must not block a newly
+    -- spawned enemy bar until the player's HUD finishes transitioning.
     healthTurn=not healthTurn
-    if (not fade.pending() or runtime.fadeSuspended) and enemyBars.ready()
+    if enemyBars.ready()
         and (healthTurn or (cursor==0 and not dirty and not statsPending and not markersReady())) then
         enemyBars.step()
         return false
