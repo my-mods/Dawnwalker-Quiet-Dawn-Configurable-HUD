@@ -58,7 +58,7 @@
     "native/EventQueue.hpp": "ff301f3b15d6c360478a673a1c43aeef08a88dccbc55e1edf56d6a64e88579ed",
     "native/Framecore2b.def": "9bc4cce17290791805f6aada8f815dabe5cf1ffe047dc0a14541207279a6ca39",
     "native/LuaOwner.hpp": "1d991a6edba4d2eaec73a8e6389cc703a22af5d01f5e3c95b2c56c904c074352",
-    "native/main.cpp": "3a226d46b9a549050605b8dd5aea745bfc9911ab14a5938562d115bdeefb8395",
+    "native/main.cpp": "ab651f73108515df362d5458ca132945f7cad56ad98b18140dbf76730c9ef045",
     "native/ObjectIdentity.hpp": "18b21a331f9bfb0e6ddd70e4ce68177d2d82dde2faff0839c03f3c37e038b0ad",
     "native/SprintPrompts.cpp": "eb7f45308fff2313ad403bc045178efb702b37b49377427447bbf489e0060555",
     "native/SprintPrompts.hpp": "ad55e7eadadd85daf87464addcdfa5dd3fde64330c8dbc74517d906c66977de1",
@@ -68,7 +68,7 @@
   },
   "nativeDll": {
     "path": "package/Data/QuietDawnHUD/dlls/main.dll",
-    "sha256": "26e723e6e533a7fe46af00bfed6a1b995c5fac1a378d910ab23fc83cfa38381c"
+    "sha256": "2ac27e5b12c6251916631710c771e6887286fa782850a32eba5bd8564083b7d9"
   },
   "forkIntegration": {
     "url": "https://github.com/JdotCarver/Dawnwalker-Quiet-Dawn-Configurable-HUD",

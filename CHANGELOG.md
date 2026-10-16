@@ -1,4 +1,4 @@
-## 1.2.4-dev
+## 1.2.4
 
 - Fix enemy health bars staying visible when entering combat quickly.
 
@@ -103,11 +103,11 @@
 - Keep the Toggle abilities hint hidden through its Focus-mode animation and during HUD peek, while preserving ability switching and the prompt opacity setting.
 
 - Hide Sprint and Haste running prompts by default, with a separate toggle in Mod Settings. Preserve other action prompts and support localized running labels.
-- Limit all HUD timers to 0–10 seconds in 0.5-second steps. Zero disables the corresponding timed reveal; keep the existing defaults and independent health/stamina thresholds.
+- Limit all HUD timers to 0â€“10 seconds in 0.5-second steps. Zero disables the corresponding timed reveal; keep the existing defaults and independent health/stamina thresholds.
 
 - Hide the quickslot switch hint through its combat animation, reveal item/ability quickslots briefly after switching with a configurable duration, and show the managed special-attack panel only while its cooldown is running. Prevent small blood fluctuations from endlessly renewing the health display.
 
-- Hide the time-of-day panel by default and reveal it briefly when time advances. Add its 0–100% opacity slider in 5-point steps and a configurable reveal duration defaulting to 4 seconds after the last time change. Keep time reveals, health alerts and HUD peek independent.
+- Hide the time-of-day panel by default and reveal it briefly when time advances. Add its 0â€“100% opacity slider in 5-point steps and a configurable reveal duration defaulting to 4 seconds after the last time change. Keep time reveals, health alerts and HUD peek independent.
 
 - Add opacity sliders for all 16 managed player HUD panels, from 0% to 100% in 5-point steps. Zero retains Quiet Dawn's existing automatic behavior, including health and stamina alerts; positive values keep each panel shown at the selected opacity.
 

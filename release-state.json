@@ -55,9 +55,9 @@
       ],
       "pending": {
         "impact": "patch",
-        "rationale": "Fix late enemy-bar construction recovery and coalesced lifecycle work; allow enemy suppression during player HUD fades and ordinary marker traffic. Includes player release notes, synchronized 1.2.4-dev metadata and rebuilt version declaration; no settings or interface changes.",
+        "rationale": "Release 1.2.4: fix enemy health bar recovery and starvation during rushed combat. Verified Lua bytes unchanged from development fix; release metadata and native version declaration rebuilt.",
         "majorOverride": false,
-        "reviewedInputs": "62dc3e1b1a2285ab4a57bf7860b16370c47a05e73fe92bbe8afa89c0e690d0b6",
+        "reviewedInputs": "ba03b1a45510fa64425d611aaa833b0a2fbc9bffda2ccded55356dd6039dcd8c",
         "divergenceReviewed": false
       },
       "publication": {
