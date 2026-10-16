@@ -8,21 +8,21 @@
       "packageFormat": 1,
       "baseline": {
         "kind": "nexus",
-        "version": "1.2.3",
-        "normalizedVersion": "1.2.3",
-        "sourceCommit": "3cbb854fd679dbacada0ff5cef718c89995e9774",
-        "sourceTag": "v1.2.3",
-        "archiveSha256": "67d2e13dcd629d03a7eb5dec2e308a686e9ed2c9c2a5344609595533ee604646",
-        "verifiedAt": "2026-10-09T17:57:17.655Z",
+        "version": "1.2.4",
+        "normalizedVersion": "1.2.4",
+        "sourceCommit": "6e3c8cb9e381c67c8b17cba8ba138319e5518a63",
+        "sourceTag": "v1.2.4",
+        "archiveSha256": "2ff0770dfeb86c6ea7488a95f59a556b3ef5988ae8d76bf62d86908d69861102",
+        "verifiedAt": "2026-10-16T14:39:16.121625+00:00",
         "nexus": {
           "game": "thebloodofdawnwalker",
           "pageId": "452",
           "modId": "41742787150276",
           "fileChainId": "7953870",
-          "versionId": "41742787153033",
-          "siteFileId": "3209"
+          "versionId": "41742787153143",
+          "siteFileId": "3319"
         },
-        "sourceFingerprint": "1ec5853cae96aa0837471b5ba1e9c0b52bf032be7c4b95ddedc82c24043b99ed"
+        "sourceFingerprint": "ba03b1a45510fa64425d611aaa833b0a2fbc9bffda2ccded55356dd6039dcd8c"
       },
       "bindings": [
         {
@@ -54,8 +54,8 @@
         "VortexExtension"
       ],
       "pending": {
-        "impact": "patch",
-        "rationale": "Release 1.2.4: fix enemy health bar recovery and starvation during rushed combat. Verified Lua bytes unchanged from development fix; release metadata and native version declaration rebuilt.",
+        "impact": "none",
+        "rationale": "Matches the verified Nexus release.",
         "majorOverride": false,
         "reviewedInputs": "ba03b1a45510fa64425d611aaa833b0a2fbc9bffda2ccded55356dd6039dcd8c",
         "divergenceReviewed": false
@@ -64,18 +64,18 @@
         "nexus": {
           "destination": "nexus",
           "verified": true,
-          "verifiedAt": "2026-10-09T17:57:17.655Z",
-          "version": "1.2.3",
-          "sourceCommit": "3cbb854fd679dbacada0ff5cef718c89995e9774",
-          "tag": "v1.2.3",
-          "archiveSha256": "67d2e13dcd629d03a7eb5dec2e308a686e9ed2c9c2a5344609595533ee604646",
+          "verifiedAt": "2026-10-16T14:39:16.121625+00:00",
+          "version": "1.2.4",
+          "sourceCommit": "6e3c8cb9e381c67c8b17cba8ba138319e5518a63",
+          "tag": "v1.2.4",
+          "archiveSha256": "2ff0770dfeb86c6ea7488a95f59a556b3ef5988ae8d76bf62d86908d69861102",
           "nexus": {
             "game": "thebloodofdawnwalker",
             "pageId": "452",
             "modId": "41742787150276",
             "fileChainId": "7953870",
-            "versionId": "41742787153033",
-            "siteFileId": "3209"
+            "versionId": "41742787153143",
+            "siteFileId": "3319"
           },
           "url": "https://www.nexusmods.com/thebloodofdawnwalker/mods/452?tab=files"
         }
