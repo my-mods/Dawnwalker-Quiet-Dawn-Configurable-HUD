@@ -57,7 +57,7 @@
         "impact": "patch",
         "rationale": "Patch 1.1 maintenance: update verified HUD and combat graph routes, observe delayed marker redraw, and correct shifted combat direction setting ID; preserve existing settings and features. Native build revision checks use the subprocess working directory.",
         "majorOverride": false,
-        "reviewedInputs": "cb933d836b4a50a8615054c8e2329b563910283c9a47ae457ed2677449bf905d",
+        "reviewedInputs": "18f31f21e1dc3330308ebcaf627068a600ef2f1b8dcf6adcba05b07d7e19ab90",
         "divergenceReviewed": false
       },
       "publication": {
