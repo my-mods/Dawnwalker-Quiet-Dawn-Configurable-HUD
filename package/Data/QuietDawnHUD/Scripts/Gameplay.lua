@@ -260,7 +260,8 @@ function runtime.noteFocusPrompt(widget)
     if pathed and path then classPath=tostring(path) end
     D.logInfo("Focus probe: promptClass=%s promptPath=%s; use this verified class path for the entry-hook probe",className,classPath)
 end
--- Entry 3515 did not change the Quickslot Abilities root. Its fade may instead
+-- The combat tag-count event did not change the Quickslot Abilities root in
+-- the earlier live probe. Its fade may instead
 -- belong to a child animation, so take a small, read-only visual-tree snapshot
 -- around that candidate. This never searches global objects, registers a hook,
 -- or writes a widget: it walks only this already-owned widget, at most 64 nodes
@@ -413,7 +414,7 @@ end
 -- A Blueprint class compiles its entire event graph into one function,
 -- ExecuteUbergraph_<Class>, whose only argument is the bytecode offset to
 -- jump to. Every event in that class is therefore reachable through a single
--- hook and told apart by that number -- which is how the 850 and 4146 below
+-- hook and told apart by that number -- which is how the 850 and 4158 below
 -- were found, and the only practical way to reach an event the game exposes
 -- no C++ UFunction for.
 --
@@ -429,7 +430,7 @@ local ubergraph = {seen = {}, count = 0}
 -- ubergraph.limit: how many sightings of each entry are reported. One is
 -- enough to discover a number; several are needed to tell what it means --
 -- whether it fires on entering Focus or on leaving it, and whether it also
--- fires during unrelated HUD activity. That is how entry 4026 was confirmed.
+-- fires during unrelated HUD activity. Match sightings to the cooked wrappers.
 ubergraph.limit = 8
 local function noteUbergraphEntry(graph, entryParam)
     if not D.debugLogging or ubergraph.count >= 256 then return end
@@ -502,9 +503,9 @@ local markerSpecs = {"Construct", "OnObservedStubIconTypeChanged",
     "NotifyIndicatorCleared", "EnableHardLock", "RefreshIndicatorsVisibility",
     "ToggleShowOnlyMiddleIndicator", "Display Icon State Directionally",
     "Display Icon State Non-Directionally", "ExecuteUbergraph_WBP_CombatTargetIndicator"}
--- Verified in a live controller run: this one graph entry occurs on both lock
+-- The EnableHardLock wrapper maps to entry 1448 in patch 1.1, for both lock
 -- and unlock. Every other entry is ignored in normal play.
-local markerHardLockEntry=1370
+local markerHardLockEntry=1448
 local markerHookIndex, markerHookAttempts, markerSeen = 1, 0, false
 local markerQueue, markerPending, markerFirst, markerLast = {}, {}, 1, 0
 local markerCache, markerSlots, markerCount, markerPrune = {}, {}, 0, 1
@@ -513,7 +514,7 @@ local function combatCueRequested()
     return config.showCounterattackDirection or config.showUnblockableWarning
         or config.showDirectionalParry or config.showEnemyMarker or config.showLockIcon
 end
--- Steam build 25129649: ERebelSetting::Game_Difficulty_CombatDirectionMarkers=71.
+-- Patch 1.1: ERebelSetting::Game_Difficulty_CombatDirectionMarkers=72.
 -- This menu setting is distinct from the widget's internal Hide Directions flag.
 local settingsFactory, settingsObject, directionsEnabled
 local settingsPending, settingsAttempts = true, 0
@@ -570,7 +571,7 @@ local function markerEvent(context, source)
     queueMarker(unwrap(context),nil,source)
 end
 local function refreshSettings(context, setting)
-    if setting and tonumber(unwrap(setting))~=71 then return end
+    if setting and tonumber(unwrap(setting))~=72 then return end
     settingsObject=unwrap(context)
     settingsPending,settingsAttempts=true,0
     wake("settings")
@@ -587,7 +588,7 @@ local function settingsStep()
             return nil
         end
         local out={}
-        local found=settingsObject:GetSettingAsBool(71,out)
+        local found=settingsObject:GetSettingAsBool(72,out)
         if found and type(out.OutSettingBool)=="boolean" then return out.OutSettingBool end
     end)
     if success and type(value)=="boolean" then
@@ -616,7 +617,7 @@ local function markerHooksStep()
     -- the final stock state produced by this Blueprint event.
     local success, pre, post=pcall(RegisterHook, path, function(context,entryParam)
         if source=="ExecuteUbergraph_WBP_CombatTargetIndicator" then
-            -- The graph covers many ordinary indicator paths. Entry 1370 alone
+            -- The graph covers many ordinary indicator paths. Entry 1448 alone
             -- is the verified lock toggle, so ignore every other call before
             -- it can create marker work. Debug retains their entry evidence.
             if D.debugLogging then noteUbergraphEntry("WBP_CombatTargetIndicator",entryParam) end
@@ -850,7 +851,7 @@ local function queueVanillaQuickslotProbe(source,discoverWidget)
     -- this is Debug-only and cannot become a poll.
     if not D.debugLogging or not config.fadeTransitions
         or panelModes.WBP_AA_Quickslots~=Modes.VANILLA then return end
-    -- Entry 3515 is only correlated with combat transitions. Limit its
+    -- Entry 3296 is only correlated with combat transitions. Limit its
     -- detailed class/visual-tree capture to three sightings per HUD instance;
     -- an unproven graph entry must never turn into diagnostic event spam.
     if discoverWidget then
@@ -899,7 +900,7 @@ end
 function runtime.focusPromptEvent(context,entryParam)
     noteUbergraphEntry("WBP_OpenFocusPrompt",entryParam)
     if not manualPeekEnabled or not config.peekOnFocusMode then return end
-    -- Unlike GameHUD entry 4026, this graph also runs when Focus is entered.
+    -- Unlike GameHUD entry 3635, this graph also runs when Focus is entered.
     -- It only asks the existing snapshot to read the pawn's authoritative flag;
     -- the transition model remains the sole place that changes HUD visibility.
     if not currentPanelEvent(context,"WBP_OpenFocusPrompt") then return end
@@ -919,28 +920,28 @@ end
 local function switchedQuickslots(context,entryParam)
     noteUbergraphEntry("WBP_GameHUD",entryParam)
     local entry=tonumber(unwrap(entryParam))
-    -- The latest combat probe recorded 3515 on both weapon draw and sheath.
+    -- The combat tag-count route is entry 3296 in patch 1.1.
     -- It is a candidate only: collect the same bounded opacity evidence before
     -- treating it as the stock Quickslot Abilities visibility route.
-    if entry==3515 and panelModes.WBP_AA_Quickslots==Modes.VANILLA then
-        queueVanillaQuickslotProbe("GameHUD graph 3515",true)
+    if entry==3296 and panelModes.WBP_AA_Quickslots==Modes.VANILLA then
+        queueVanillaQuickslotProbe("GameHUD graph 3296",true)
     end
-    -- 4026 is a confirmed Focus-release graph entry. It does not decide the
+    -- 3635 is a confirmed Focus-release graph entry. It does not decide the
     -- reveal itself: it only wakes the normal pawn snapshot, which reads the
     -- authoritative bIsInFocusMode transition and starts the hold if needed.
-    if entry==2442 or entry==2657 or entry==4026 then
+    if entry==573 or entry==2257 or entry==3635 then
         if manualPeekEnabled and config.peekOnFocusMode and currentPanelEvent(context) then
             statsPending=true
             wake("resource")
         end
         return
     end
-    -- Stock Toggle AA Quickslots delegate enters the graph at 4146. It is a
+    -- Stock Toggle AA Quickslots delegate enters the graph at 4158. It is a
     -- known manual-toggle source, recorded separately from combat presets
     -- while the Vanilla-fade route is still being discovered.
-    if entry~=4146 then return end
+    if entry~=4158 then return end
     if panelModes.WBP_AA_Quickslots==Modes.VANILLA then
-        queueVanillaQuickslotProbe("Toggle AA Quickslots graph 4146")
+        queueVanillaQuickslotProbe("Toggle AA Quickslots graph 4158")
     end
     if config.switchRevealSeconds<=0 or not hasSwitchPanels() or not currentPanelEvent(context) then return end
     local focus=hud.CombatFocusPanel
@@ -1992,7 +1993,7 @@ function runtime.workerDelay()
         if runtime.fadeInFlight and D.debugLogging then D.count("fadeFrameGateBackoffs") end
         return runtime.fadeInFlight and runtime.workerPausedFadeMs or runtime.workerIdleMs
     end
-    -- A 1370 hard-lock transition has one queued presentation correction.
+    -- A 1448 hard-lock transition has one queued presentation correction.
     -- Re-arm promptly until that finite job is consumed; the frame gate above
     -- still prevents a busy loop when rendering has stopped.
     if markerUrgent then return runtime.workerFadeMs end

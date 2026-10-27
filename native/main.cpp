@@ -59,7 +59,7 @@ constexpr std::array specs{
     Spec{L"/Game/_Dawnwalker/UI/_Unified/HUD/Timer/WBP_HudTimer.WBP_HudTimer_C:ExecuteUbergraph_WBP_HudTimer",Kind::Entry,455},
     Spec{L"/Game/_Dawnwalker/UI/_Unified/HUD/AbilityCooldowns/WBP_HUD_SpecialAttackCooldown.WBP_HUD_SpecialAttackCooldown_C:SetupCooldownEffect"},
     Spec{L"/Game/_Dawnwalker/UI/_Unified/HUD/AbilityCooldowns/WBP_HUD_SpecialAttackCooldown.WBP_HUD_SpecialAttackCooldown_C:OnCooldownFinished"},
-    Spec{HUD L"ExecuteUbergraph_WBP_GameHUD",Kind::Entry,4146},
+    Spec{HUD L"ExecuteUbergraph_WBP_GameHUD",Kind::Entry,4158},
     // The prompt worker reads the current HUD prompts after delivery. None of
     // this event's parameters are resource scalars or need to be captured.
     Spec{HUD L"OnSetInputPromptEnabled"},
@@ -73,7 +73,7 @@ constexpr std::array specs{
     // dispatch bypasses OnSetInputPromptEnabled. Capture context only.
     Spec{L"/Game/_Dawnwalker/UI/_Unified/Gameplay/InputPrompt/WBP_InputPrompt.WBP_InputPrompt_C:UpdateWidget"},
     // Append only: existing IDs are part of the Lua bridge contract.
-    Spec{MARKER L"ExecuteUbergraph_WBP_CombatTargetIndicator",Kind::Entry,1370},
+    Spec{MARKER L"ExecuteUbergraph_WBP_CombatTargetIndicator",Kind::Entry,1448},
     Spec{L"/Game/_Dawnwalker/UI/_Unified/HUD/CombatFocus/WBP_OpenFocusPrompt.WBP_OpenFocusPrompt_C:ExecuteUbergraph_WBP_OpenFocusPrompt"},
     Spec{HUD L"OnSetCrosshairTextEnabled"},
     Spec{HUD L"Set AA Quickslots Showed"}
@@ -184,7 +184,7 @@ void capture(const std::shared_ptr<State>& state, UObject* object, FFrame& stack
                 // GameHUD also dispatches Focus transitions through this same
                 // UFunction. Keep one binding and forward only the known entries.
                 if (entry!=specs[id-1].entry && !(id==23 &&
-                    (entry==2442 || entry==2657 || entry==4026))) return;
+                    (entry==573 || entry==2257 || entry==3635))) return;
                 event.value=entry;
             } else {
                 event.resource=true;
@@ -255,7 +255,7 @@ int bind(State& state, std::string_view path) {
 class QuietDawnMod final: public CppUserModBase {
     std::shared_ptr<State> state=std::make_shared<State>();
 public:
-    QuietDawnMod() { ModName=STR("Quiet Dawn native HUD bridge"); ModVersion=STR("1.2.4"); ModAuthors=STR("oOCamilleOo_"); }
+    QuietDawnMod() { ModName=STR("Quiet Dawn native HUD bridge"); ModVersion=STR("1.2.5-dev"); ModAuthors=STR("oOCamilleOo_"); }
     void on_lua_start(StringViewType name,Lua& lua,Lua& main,Lua& async,Lua* hook) override {
         if (name!=STR("QuietDawnHUD")) return;
         QuietDawn::SprintPrompts::registerLua(lua);

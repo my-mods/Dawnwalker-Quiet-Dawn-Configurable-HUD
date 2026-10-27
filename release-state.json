@@ -54,10 +54,10 @@
         "VortexExtension"
       ],
       "pending": {
-        "impact": "none",
-        "rationale": "Matches the verified Nexus release.",
+        "impact": "patch",
+        "rationale": "Patch 1.1 maintenance: update verified HUD and combat graph routes, observe delayed marker redraw, and correct shifted combat direction setting ID; preserve existing settings and features. Native build revision checks use the subprocess working directory.",
         "majorOverride": false,
-        "reviewedInputs": "ba03b1a45510fa64425d611aaa833b0a2fbc9bffda2ccded55356dd6039dcd8c",
+        "reviewedInputs": "bb5864005a4a232b9b2dd4e84339aae28a72df542439f9dbdf147e614f90a3e5",
         "divergenceReviewed": false
       },
       "publication": {

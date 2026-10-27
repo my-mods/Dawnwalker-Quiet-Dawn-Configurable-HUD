@@ -8,7 +8,8 @@ find_package(Git REQUIRED)
 foreach(item IN ITEMS ".;97b7e501c19d8b2b7c662feee73aaa0dc1f0a4d1" "deps/first/Unreal;eb40a05f49509bdeb1ac39287032b60af585cca8")
     list(GET item 0 folder)
     list(GET item 1 expected)
-    execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${UE4SS_SDK}/${folder}" rev-parse HEAD
+    execute_process(COMMAND "${GIT_EXECUTABLE}" rev-parse HEAD
+        WORKING_DIRECTORY "${UE4SS_SDK}/${folder}"
         OUTPUT_VARIABLE actual OUTPUT_STRIP_TRAILING_WHITESPACE RESULT_VARIABLE result)
     if(NOT result EQUAL 0 OR NOT actual STREQUAL expected)
         message(FATAL_ERROR "Incorrect SDK revision for ${folder}; see BUILD.md.")

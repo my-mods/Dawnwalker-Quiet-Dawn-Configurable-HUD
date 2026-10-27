@@ -424,7 +424,7 @@ void after(Hook::TCallbackIterationData<void>&,UObject* object,FFrame& stack,voi
         auto locals=stack.Locals();if(!locals) return;const int entry=read<int>(locals,state.entryOffset);
         // State change/latent redraw, lock, clear, and distance transition only.
         // The marker graph is not a Tick hook or permanent readiness worker.
-        if(entry!=1370 && entry!=952 && entry!=30 && entry!=582 && entry!=41) return;
+        if(entry!=1448 && entry!=1030 && entry!=80 && entry!=617 && entry!=91) return;
     }
     auto lease=find(object);if(!lease || lease->suspended) return;
     state.busy=true;struct Busy {~Busy(){state.busy=false;}} busy;
